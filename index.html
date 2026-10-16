@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,14 +195,15 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot, addDoc, updateDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // Konfigurasi Firebase BARU (dormz-member-access)
         const firebaseConfig = {
-            apiKey: "AIzaSyA7_hLZUFVlYG99QOtyMi_dxTrMj9hWJnE",
-            authDomain: "pandanian-verify-access.firebaseapp.com",
-            projectId: "pandanian-verify-access",
-            storageBucket: "pandanian-verify-access.firebasestorage.app",
-            messagingSenderId: "242504791002",
-            appId: "1:242504791002:web:20a78dbd65cdc743adc6e3",
-            measurementId: "G-GBYVVM2TR8"
+            apiKey: "AIzaSyDomIAXu2J5j6ZA0Yl6qrhm96mwAKPOw20",
+            authDomain: "dormz-member-access.firebaseapp.com",
+            projectId: "dormz-member-access",
+            storageBucket: "dormz-member-access.firebasestorage.app",
+            messagingSenderId: "374656483125",
+            appId: "1:374656483125:web:7cbfc0b461544abe1d967c",
+            measurementId: "G-437SH24885"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -413,6 +415,4 @@
                 const requests = [];
                 snapshot.forEach(function(doc) {
                     requests.push({ id: doc.id, ...doc.data() });
-                });
-                
-                r
+       
