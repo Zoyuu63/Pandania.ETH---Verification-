@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,7 @@
     <title>Discord Verification Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -30,6 +32,7 @@
             }
         }
     </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
@@ -42,7 +45,6 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -56,7 +58,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #5865F2; 
         }
-        /* Animation */
         @keyframes slideIn {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -126,9 +127,8 @@
             </div>
         </div>
 
-        <!-- ADMIN VIEW (Hidden by default) -->
+        <!-- ADMIN VIEW -->
         <div id="view-admin" class="w-full max-w-4xl hidden animate-slide-in h-[80vh] flex flex-col">
-            
             <div class="flex justify-between items-end mb-6">
                 <div>
                     <h2 class="text-3xl font-bold text-white">Admin Dashboard</h2>
@@ -137,7 +137,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow min-h-0">
-                <!-- Settings Panel -->
                 <div class="glass-panel p-6 rounded-2xl flex flex-col gap-5 overflow-y-auto">
                     <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2">Configuration</h3>
                     
@@ -147,14 +146,9 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-discord-muted uppercase mb-2">Discord Webhook URL (Optional)</label>
+                        <label class="block text-xs font-bold text-discord-muted uppercase mb-2">Discord Webhook URL</label>
                         <input type="password" id="admin-webhook" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm">
                         <p class="text-[10px] text-discord-muted mt-1">Used to send logs directly to your Discord channel.</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-discord-muted uppercase mb-2">Verified Role ID (Mock)</label>
-                        <input type="text" id="admin-role-id" placeholder="123456789012345678" class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all font-mono text-sm">
                     </div>
 
                     <button id="btn-save-config" class="mt-auto w-full bg-discord-green hover:bg-[#1f904d] text-white font-semibold py-2 rounded-md transition-all">
@@ -162,12 +156,9 @@
                     </button>
                 </div>
 
-                <!-- Logs/Requests Panel -->
                 <div class="glass-panel p-6 rounded-2xl md:col-span-2 flex flex-col">
                     <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2 mb-4">Pending Verifications</h3>
-                    
                     <div id="requests-container" class="flex-grow overflow-y-auto space-y-3 pr-2">
-                        <!-- Requests will be injected here -->
                         <div class="text-center text-discord-muted py-10 flex flex-col items-center">
                             <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50"></i>
                             <p>Loading requests...</p>
@@ -197,17 +188,13 @@
         <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-discord-green rounded-full blur-[120px] opacity-10"></div>
     </div>
 
-    <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot, addDoc, updateDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // =====================================================================
-        // KONFIGURASI FIREBASE MILIKMU (SUDAH DIPASANG OTOMATIS)
-        // =====================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyA7_hLZUFVlYG99QOtyMi_dxTrMj9hWJnE",
             authDomain: "pandanian-verify-access.firebaseapp.com",
@@ -242,32 +229,36 @@
             uiServerName: document.getElementById('ui-server-name'),
             adminServerName: document.getElementById('admin-server-name'),
             adminWebhook: document.getElementById('admin-webhook'),
-            adminRoleId: document.getElementById('admin-role-id'),
             requestsContainer: document.getElementById('requests-container')
         };
 
-        // PATH DATABASE YANG SUDAH DIPERBAIKI (2 TINGKAT: AMAN)
-        const configCollection = 'verify_portal';
-        const configDocId = 'main_config';
-
-        function showToast(message, type = 'info') {
+        function showToast(message, type) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
             let bgColor = 'bg-discord-card';
             let icon = 'fa-circle-info text-discord-blurple';
-            if (type === 'success') { bgColor = 'bg-discord-card border-l-4 border-discord-green'; icon = 'fa-circle-check text-discord-green'; }
-            if (type === 'error') { bgColor = 'bg-discord-card border-l-4 border-discord-red'; icon = 'fa-circle-xmark text-discord-red'; }
+            
+            if (type === 'success') {
+                bgColor = 'bg-discord-card border-l-4 border-discord-green';
+                icon = 'fa-circle-check text-discord-green';
+            } else if (type === 'error') {
+                bgColor = 'bg-discord-card border-l-4 border-discord-red';
+                icon = 'fa-circle-xmark text-discord-red';
+            }
 
             toast.className = `${bgColor} text-white px-4 py-3 rounded shadow-lg flex items-center gap-3 animate-slide-in min-w-[250px]`;
             toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
             
             container.appendChild(toast);
-            setTimeout(() => {
+            
+            setTimeout(function() {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateY(10px)';
                 toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
+                setTimeout(function() {
+                    toast.remove();
+                }, 300);
             }, 3000);
         }
 
@@ -275,22 +266,22 @@
             try {
                 await signInAnonymously(auth);
                 currentUser = auth.currentUser;
-                console.log("Authenticated as:", currentUser.uid);
+                console.log("Login sukses. UID:", currentUser.uid);
                 listenToConfig();
             } catch (error) {
                 console.error("Auth Error:", error);
-                showToast("Koneksi gagal. Cek Authentication Anonymous di Firebase.", "error");
+                showToast("Gagal menyambung ke server.", "error");
             }
         }
 
         function listenToConfig() {
             if (!currentUser) return;
 
-            const docRef = doc(db, configCollection, configDocId);
-            onSnapshot(docRef, (snapshot) => {
+            const docRef = doc(db, "verify_portal", "main_config");
+            
+            onSnapshot(docRef, function(snapshot) {
                 if (snapshot.exists()) {
                     appConfig = snapshot.data();
-                    
                     isOwner = (appConfig.adminUid === currentUser.uid);
                     
                     uiElements.navServerName.textContent = appConfig.serverName || 'Discord Server';
@@ -300,39 +291,39 @@
                         tabs.admin.classList.remove('hidden');
                         if (!uiElements.adminServerName.value) uiElements.adminServerName.value = appConfig.serverName || '';
                         if (!uiElements.adminWebhook.value) uiElements.adminWebhook.value = appConfig.webhookUrl || '';
-                        if (!uiElements.adminRoleId.value) uiElements.adminRoleId.value = appConfig.roleId || '';
                     } else {
                         tabs.admin.classList.add('hidden');
-                        if (currentTab === 'admin') switchTab('verify'); 
+                        if (currentTab === 'admin') {
+                            switchTab('verify'); 
+                        }
                     }
                     
-                    if (currentTab === 'claim') switchTab('verify');
-
+                    if (currentTab === 'claim') {
+                        switchTab('verify');
+                    }
                 } else {
                     appConfig = null;
                     isOwner = false;
                     switchTab('claim');
                 }
-            }, (error) => {
+            }, function(error) {
                 console.error("Error database:", error);
-                showToast("Database tertutup. Cek Firestore Rules di Firebase.", "error");
             });
-
+            
             listenToVerifications();
         }
 
         async function claimAdmin() {
             if (!currentUser) return;
-            const docRef = doc(db, configCollection, configDocId);
+            const docRef = doc(db, "verify_portal", "main_config");
             try {
                 await setDoc(docRef, {
                     adminUid: currentUser.uid,
-                    serverName: "My Awesome Server",
+                    serverName: "My Discord Server",
                     webhookUrl: "",
-                    roleId: "",
                     createdAt: serverTimestamp()
                 });
-                showToast("Admin berhasil diklaim!", "success");
+                showToast("Berhasil jadi Admin!", "success");
                 switchTab('admin');
             } catch (error) {
                 console.error("Claim error:", error);
@@ -345,12 +336,11 @@
             const btn = document.getElementById('btn-save-config');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
             
-            const docRef = doc(db, configCollection, configDocId);
+            const docRef = doc(db, "verify_portal", "main_config");
             try {
                 await updateDoc(docRef, {
                     serverName: uiElements.adminServerName.value.trim(),
-                    webhookUrl: uiElements.adminWebhook.value.trim(),
-                    roleId: uiElements.adminRoleId.value.trim()
+                    webhookUrl: uiElements.adminWebhook.value.trim()
                 });
                 showToast("Pengaturan disimpan!", "success");
             } catch (error) {
@@ -370,7 +360,7 @@
             const username = usernameInput.value.trim();
             
             if(!username) {
-                showToast("Tulis username dulu cuy", "error");
+                showToast("Isi username dulu!", "error");
                 return;
             }
 
@@ -379,7 +369,7 @@
             btn.classList.add('opacity-70');
 
             try {
-                const verifCollection = collection(db, configCollection, configDocId, "requests");
+                const verifCollection = collection(db, "verify_portal", "main_config", "requests");
                 await addDoc(verifCollection, {
                     uid: currentUser.uid,
                     discordUsername: username,
@@ -388,10 +378,42 @@
                 });
                 
                 showToast("Berhasil terkirim!", "success");
+                
+                if (appConfig.webhookUrl) {
+                    fetch(appConfig.webhookUrl, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            content: `🔔 **VERIFIKASI BARU**\nUser Discord: \`${username}\` baru saja meminta verifikasi di web portal. Cek Admin Dashboard!`,
+                        })
+                    }).catch(function(err) {
+                        console.log("Webhook error", err);
+                    });
+                }
 
             } catch (error) {
                 console.error("Verification submit error:", error);
                 showToast("Gagal mengirim data.", "error");
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Verification';
-                btn.classList.remove('opacity-7
+                btn.classList.remove('opacity-70');
+            }
+        }
+
+        let unsubscribeVerifications = null;
+        
+        function listenToVerifications() {
+            if (!currentUser) return;
+            const verifCollection = collection(db, "verify_portal", "main_config", "requests");
+            
+            if (unsubscribeVerifications) {
+                unsubscribeVerifications();
+            }
+            
+            unsubscribeVerifications = onSnapshot(verifCollection, function(snapshot) {
+                const requests = [];
+                snapshot.forEach(function(doc) {
+                    requests.push({ id: doc.id, ...doc.data() });
+                });
+                
+                r
