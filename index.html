@@ -414,4 +414,209 @@
                 const requests = [];
                 snapshot.forEach(function(doc) {
                     requests.push({ id: doc.id, ...doc.data() });
-       
+                });
+                
+                requests.sort(function(a, b) {
+                    return (b.timestamp || 0) - (a.timestamp || 0);
+                });
+                
+                renderAdminRequests(requests);
+                checkUserStatus(requests);
+            }, function(error) {
+                console.error("Listen verifications error:", error);
+            });
+        }
+
+        function checkUserStatus(requests) {
+            const myRequest = requests.find(function(req) {
+                return req.uid === currentUser.uid;
+            });
+            
+            const form = document.getElementById('verify-form');
+            const statusDiv = document.getElementById('verify-status');
+            
+            if (myRequest) {
+                form.classList.add('hidden');
+                statusDiv.classList.remove('hidden');
+                
+                if (myRequest.status === 'pending') {
+                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-discord-card border border-yellow-500/30 text-left';
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-hourglass-half text-yellow-500 text-xl"></i>
+                            <div>
+                                <p class="text-white font-bold">Request Pending</p>
+                                <p class="text-xs text-discord-muted mt-1">Awaiting review for <strong>${myRequest.discordUsername}</strong>.</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (myRequest.status === 'approved') {
+                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-discord-card border border-discord-green/50 text-left';
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-circle-check text-discord-green text-xl"></i>
+                            <div>
+                                <p class="text-white font-bold">Verification Approved!</p>
+                                <p class="text-xs text-discord-muted mt-1">Welcome to the server!</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (myRequest.status === 'rejected') {
+                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-discord-card border border-discord-red/50 text-left';
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-circle-xmark text-discord-red text-xl"></i>
+                            <div>
+                                <p class="text-white font-bold">Verification Rejected</p>
+                                <p class="text-xs text-discord-muted mt-1">Your request was denied.</p>
+                            </div>
+                        </div>
+                        <button onclick="window.resetVerification('${myRequest.id}')" class="mt-3 text-xs bg-discord-hover px-3 py-1 rounded hover:bg-gray-600 transition text-white">Try Again</button>
+                    `;
+                }
+            } else {
+                form.classList.remove('hidden');
+                statusDiv.classList.add('hidden');
+                const btn = document.getElementById('btn-submit-verify');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Verification';
+                btn.classList.remove('opacity-70');
+            }
+        }
+
+        window.resetVerification = async function(docId) {
+            if(!currentUser) return;
+            try {
+                const docRef = doc(db, "verify_portal", "main_config", "requests", docId);
+                await deleteDoc(docRef);
+            } catch (error) { 
+                console.error("Reset error:", error); 
+            }
+        };
+
+        function renderAdminRequests(requests) {
+            if (!isOwner) return;
+            const container = uiElements.requestsContainer;
+            container.innerHTML = '';
+            
+            if (requests.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-discord-muted py-10 flex flex-col items-center">
+                        <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50"></i>
+                        <p>No verification requests yet.</p>
+                    </div>`;
+                return;
+            }
+
+            requests.forEach(function(req) {
+                const date = new Date(req.timestamp).toLocaleString();
+                let statusBadge = '';
+                let actionButtons = '';
+                
+                if (req.status === 'pending') {
+                    statusBadge = `<span class="bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-1 rounded font-bold uppercase">Pending</span>`;
+                    actionButtons = `
+                        <button onclick="window.updateRequestStatus('${req.id}', 'approved')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-green text-white transition-colors flex items-center justify-center" title="Approve"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="window.updateRequestStatus('${req.id}', 'rejected')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-red text-white transition-colors flex items-center justify-center" title="Reject"><i class="fa-solid fa-xmark"></i></button>
+                    `;
+                } else if (req.status === 'approved') {
+                    statusBadge = `<span class="bg-discord-green/20 text-discord-green text-[10px] px-2 py-1 rounded font-bold uppercase">Approved</span>`;
+                    actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline">Delete</button>`;
+                } else {
+                    statusBadge = `<span class="bg-discord-red/20 text-discord-red text-[10px] px-2 py-1 rounded font-bold uppercase">Rejected</span>`;
+                    actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline">Delete</button>`;
+                }
+
+                const el = document.createElement('div');
+                el.className = 'bg-[#1e1f22] p-4 rounded-lg flex items-center justify-between border border-transparent hover:border-[#3f4147] transition-colors';
+                el.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-10 h-10 rounded-full bg-discord-card flex items-center justify-center text-discord-muted flex-shrink-0"><i class="fa-brands fa-discord text-xl"></i></div>
+                        <div class="truncate">
+                            <div class="flex items-center gap-2"><p class="text-white font-semibold truncate">${req.discordUsername}</p>${statusBadge}</div>
+                            <p class="text-[10px] text-discord-muted">${date}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 ml-4 flex-shrink-0">${actionButtons}</div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        window.updateRequestStatus = async function(docId, newStatus) {
+            if (!currentUser || !isOwner) return;
+            try {
+                const docRef = doc(db, "verify_portal", "main_config", "requests", docId);
+                await updateDoc(docRef, { status: newStatus });
+                
+                if (newStatus === 'approved' && appConfig && appConfig.webhookUrl) {
+                    fetch(appConfig.webhookUrl, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            content: `✅ User **telah diverifikasi** via Web Portal!`,
+                        })
+                    }).catch(function(e) {
+                        console.log(e);
+                    });
+                }
+                showToast(`Status diubah jadi ${newStatus}!`, newStatus === 'approved' ? 'success' : 'info');
+            } catch (error) {
+                console.error("Update status error:", error);
+                showToast("Gagal ubah status.", "error");
+            }
+        };
+
+        window.deleteRequest = async function(docId) {
+            if (!currentUser || !isOwner) return;
+            try {
+                const docRef = doc(db, "verify_portal", "main_config", "requests", docId);
+                await deleteDoc(docRef);
+                showToast("Data dihapus.", "info");
+            } catch (error) { 
+                console.error("Delete error:", error); 
+            }
+        };
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            Object.keys(views).forEach(function(key) {
+                if (views[key]) {
+                    views[key].classList.add('hidden');
+                }
+            });
+            
+            tabs.verify.classList.replace('bg-discord-hover', 'bg-transparent');
+            tabs.verify.classList.replace('text-white', 'text-discord-muted');
+            tabs.admin.classList.replace('bg-discord-hover', 'bg-transparent');
+            tabs.admin.classList.replace('text-white', 'text-discord-muted');
+
+            if (views[tabName]) {
+                views[tabName].classList.remove('hidden');
+            }
+            
+            if (tabs[tabName]) {
+                tabs[tabName].classList.replace('bg-transparent', 'bg-discord-hover');
+                tabs[tabName].classList.replace('text-discord-muted', 'text-white');
+            }
+        }
+
+        tabs.verify.addEventListener('click', function() {
+            switchTab('verify');
+        });
+        
+        tabs.admin.addEventListener('click', function() {
+            if (isOwner) {
+                switchTab('admin');
+            }
+        });
+        
+        document.getElementById('btn-claim-admin').addEventListener('click', claimAdmin);
+        document.getElementById('btn-save-config').addEventListener('click', saveConfig);
+        document.getElementById('verify-form').addEventListener('submit', submitVerification);
+
+        initAuth();
+    </script>
+</body>
+</html>
