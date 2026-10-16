@@ -34,21 +34,41 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
         body {
-            background-color: #313338;
+            /* Warna dasar kalau gambar gagal dimuat */
+            background-color: #313338; 
+            
+            /* --- PENGATURAN CUSTOM BACKGROUND --- */
+            /* Gambar dari user: zoyubanner.png */
+            background-image: 
+                linear-gradient(rgba(17, 18, 20, 0.75), rgba(17, 18, 20, 0.75)), /* Efek kaca film agak digelapin dikit biar teks tetap kebaca jelas */
+                url('zoyubanner.png'); 
+            
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            /* ------------------------------------ */
+
             color: #dbdee1;
             font-family: 'Inter', sans-serif;
         }
+        
         .glass-panel {
-            background: rgba(43, 45, 49, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            /* Efek panel kaca transparan (Glassmorphism) */
+            background: rgba(43, 45, 49, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
+        
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #2b2d31; 
+            background: rgba(43, 45, 49, 0.5); 
         }
         ::-webkit-scrollbar-thumb {
             background: #1e1f22; 
@@ -68,7 +88,7 @@
 </head>
 <body class="min-h-screen flex flex-col relative overflow-hidden">
 
-    <nav class="bg-[#1e1f22] border-b border-[#2b2d31] py-3 px-6 shadow-md z-10">
+    <nav class="bg-[#1e1f22]/80 backdrop-blur-md border-b border-[#2b2d31]/50 py-3 px-6 shadow-md z-10 sticky top-0">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-discord-blurple rounded-[12px] flex items-center justify-center text-white font-bold text-xl shadow-lg">
@@ -78,10 +98,10 @@
             </div>
             
             <div class="flex gap-2" id="nav-links">
-                <button id="btn-tab-verify" class="px-4 py-2 rounded-md bg-discord-hover text-white font-medium transition-colors">
+                <button id="btn-tab-verify" class="px-4 py-2 rounded-md bg-discord-blurple/80 backdrop-blur-sm text-white font-medium transition-colors border border-discord-blurple">
                     Verify
                 </button>
-                <button id="btn-tab-admin" class="px-4 py-2 rounded-md hover:bg-discord-hover text-discord-muted hover:text-white font-medium transition-colors hidden">
+                <button id="btn-tab-admin" class="px-4 py-2 rounded-md hover:bg-discord-hover/80 text-discord-muted hover:text-white font-medium transition-colors hidden">
                     <i class="fa-solid fa-gear mr-2"></i>Admin
                 </button>
             </div>
@@ -92,41 +112,41 @@
         
         <!-- VERIFY VIEW -->
         <div id="view-verify" class="w-full max-w-md animate-slide-in my-8">
-            <div class="glass-panel p-8 rounded-2xl shadow-2xl text-center">
-                <div class="w-24 h-24 bg-[#1e1f22] rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-[#2b2d31] relative">
-                    <i class="fa-solid fa-shield-halved text-4xl text-discord-green"></i>
+            <div class="glass-panel p-8 rounded-2xl text-center">
+                <div class="w-24 h-24 bg-[#1e1f22]/80 rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-[#2b2d31]/50 relative shadow-lg">
+                    <i class="fa-solid fa-shield-halved text-4xl text-discord-green drop-shadow-[0_0_8px_rgba(35,165,89,0.5)]"></i>
                     <div class="absolute bottom-0 right-0 w-6 h-6 bg-discord-green rounded-full border-4 border-[#2b2d31]"></div>
                 </div>
                 
-                <h2 class="text-2xl font-bold text-white mb-2" id="ui-server-name">Join Our Server</h2>
-                <p class="text-discord-muted mb-6 text-sm">To gain full access to the server, please complete the verification process below.</p>
+                <h2 class="text-2xl font-bold text-white mb-2 drop-shadow-md" id="ui-server-name">Join Our Server</h2>
+                <p class="text-discord-text/80 mb-6 text-sm drop-shadow-sm">To gain full access to the server, please complete the verification process below.</p>
 
-                <div id="verify-status" class="hidden mb-6 p-4 rounded-lg bg-discord-hover text-left">
+                <div id="verify-status" class="hidden mb-6 p-4 rounded-lg bg-discord-card/80 border border-white/5 text-left backdrop-blur-md">
                     <!-- Status injected here -->
                 </div>
 
                 <form id="verify-form" class="space-y-4 text-left">
                     <div>
-                        <label class="block text-xs font-bold text-discord-muted uppercase mb-2">Your Discord Username</label>
+                        <label class="block text-xs font-bold text-discord-text/90 uppercase mb-2 drop-shadow-sm">Your Discord Username</label>
                         <div class="relative">
                             <i class="fa-brands fa-discord absolute left-3 top-3 text-discord-muted"></i>
-                            <input type="text" id="input-username" required placeholder="e.g. utena_hiiragi" class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2.5 pl-10 pr-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all placeholder-discord-muted">
+                            <input type="text" id="input-username" required placeholder="e.g. utena_hiiragi" class="w-full bg-[#1e1f22]/80 text-white border border-white/5 rounded-md py-2.5 pl-10 pr-3 focus:ring-2 focus:ring-discord-blurple focus:border-transparent outline-none transition-all placeholder-discord-muted backdrop-blur-sm">
                         </div>
                     </div>
                     
-                    <div class="flex items-center gap-3 bg-[#1e1f22] p-3 rounded-md border border-[#1e1f22] hover:border-discord-hover transition-colors cursor-pointer" id="rule-checkbox-container">
-                        <input type="checkbox" id="input-rules" required class="w-5 h-5 rounded border-gray-600 text-discord-blurple focus:ring-discord-blurple focus:ring-offset-[#1e1f22] bg-[#2b2d31]">
-                        <label for="input-rules" class="text-sm text-discord-muted cursor-pointer select-none">I have read and agree to the server rules.</label>
+                    <div class="flex items-center gap-3 bg-[#1e1f22]/60 p-3 rounded-md border border-white/5 hover:border-discord-hover transition-colors cursor-pointer backdrop-blur-sm" id="rule-checkbox-container">
+                        <input type="checkbox" id="input-rules" required class="w-5 h-5 rounded border-gray-600 text-discord-blurple focus:ring-discord-blurple focus:ring-offset-transparent bg-[#2b2d31]/80">
+                        <label for="input-rules" class="text-sm text-discord-text/90 cursor-pointer select-none drop-shadow-sm">I have read and agree to the server rules.</label>
                     </div>
 
-                    <button type="submit" id="btn-submit-verify" class="w-full bg-discord-blurple hover:bg-discord-blurpleHover text-white font-semibold py-3 rounded-md transition-all shadow-lg flex justify-center items-center gap-2 mt-4">
+                    <button type="submit" id="btn-submit-verify" class="w-full bg-discord-blurple hover:bg-discord-blurpleHover text-white font-semibold py-3 rounded-md transition-all shadow-[0_4px_14px_0_rgba(88,101,242,0.39)] flex justify-center items-center gap-2 mt-4 hover:-translate-y-0.5">
                         <i class="fa-solid fa-paper-plane"></i> Submit Verification
                     </button>
                 </form>
 
-                <!-- NEW: STAFF STATUS SECTION -->
-                <div class="mt-8 border-t border-[#3f4147] pt-6 text-left">
-                    <h3 class="text-[11px] font-bold text-discord-muted uppercase mb-3 tracking-wider"><i class="fa-solid fa-users mr-1"></i> Staff Status</h3>
+                <!-- STAFF STATUS SECTION -->
+                <div class="mt-8 border-t border-white/10 pt-6 text-left">
+                    <h3 class="text-[11px] font-bold text-discord-text/80 uppercase mb-3 tracking-wider drop-shadow-sm"><i class="fa-solid fa-users mr-1"></i> Staff Status</h3>
                     <div id="ui-staff-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <!-- Staff cards injected via JS -->
                     </div>
@@ -138,31 +158,31 @@
         <div id="view-admin" class="w-full max-w-5xl hidden animate-slide-in h-[85vh] flex flex-col">
             <div class="flex justify-between items-end mb-6">
                 <div>
-                    <h2 class="text-3xl font-bold text-white">Admin Dashboard</h2>
-                    <p class="text-discord-muted mt-1">Manage server verification settings and requests. <span class="text-xs bg-discord-blurple text-white px-2 py-0.5 rounded ml-2">Private Tab</span></p>
+                    <h2 class="text-3xl font-bold text-white drop-shadow-md">Admin Dashboard</h2>
+                    <p class="text-discord-text/90 mt-1 drop-shadow-sm">Manage server verification settings and requests. <span class="text-xs bg-discord-blurple text-white px-2 py-0.5 rounded ml-2 shadow-sm">Private Tab</span></p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow min-h-0">
                 
                 <!-- KIRI: CONFIG & STAFF -->
-                <div class="flex flex-col gap-6 overflow-y-auto pr-2">
+                <div class="flex flex-col gap-6 overflow-y-auto pr-2 pb-6">
                     
                     <!-- Config Panel -->
                     <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4">
-                        <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2">Configuration</h3>
+                        <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-white/10 pb-2">Configuration</h3>
                         
                         <div>
-                            <label class="block text-[10px] font-bold text-discord-muted uppercase mb-1">Server Name</label>
-                            <input type="text" id="admin-server-name" class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm">
+                            <label class="block text-[10px] font-bold text-discord-text/80 uppercase mb-1 drop-shadow-sm">Server Name</label>
+                            <input type="text" id="admin-server-name" class="w-full bg-[#1e1f22]/80 text-white border border-white/5 rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm backdrop-blur-sm">
                         </div>
 
                         <div>
-                            <label class="block text-[10px] font-bold text-discord-muted uppercase mb-1">Discord Webhook URL</label>
-                            <input type="password" id="admin-webhook" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm">
+                            <label class="block text-[10px] font-bold text-discord-text/80 uppercase mb-1 drop-shadow-sm">Discord Webhook URL</label>
+                            <input type="password" id="admin-webhook" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-[#1e1f22]/80 text-white border border-white/5 rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm backdrop-blur-sm">
                         </div>
 
-                        <button id="btn-save-config" class="mt-2 w-full bg-discord-green hover:bg-[#1f904d] text-white font-semibold py-2 rounded-md transition-all text-sm">
+                        <button id="btn-save-config" class="mt-2 w-full bg-discord-green hover:bg-[#1f904d] text-white font-semibold py-2 rounded-md transition-all text-sm shadow-lg hover:-translate-y-0.5">
                             Save Settings
                         </button>
                     </div>
@@ -170,15 +190,15 @@
                     <!-- Staff Management Panel -->
                     <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4">
                         <div>
-                            <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2">Staff Status</h3>
-                            <p class="text-[10px] text-discord-muted mt-1">Toggle online status for the public page.</p>
+                            <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-white/10 pb-2">Staff Status</h3>
+                            <p class="text-[10px] text-discord-text/80 mt-1 drop-shadow-sm">Toggle online status for the public page.</p>
                         </div>
                         
                         <div id="admin-staff-container" class="space-y-2">
                             <!-- Admin staff inputs injected via JS -->
                         </div>
 
-                        <button id="btn-save-staff" class="mt-2 w-full bg-discord-blurple hover:bg-discord-blurpleHover text-white font-semibold py-2 rounded-md transition-all text-sm">
+                        <button id="btn-save-staff" class="mt-2 w-full bg-discord-blurple hover:bg-discord-blurpleHover text-white font-semibold py-2 rounded-md transition-all text-sm shadow-lg hover:-translate-y-0.5">
                             Update Staff Status
                         </button>
                     </div>
@@ -186,11 +206,11 @@
                 </div>
 
                 <!-- KANAN: PENDING VERIFICATIONS -->
-                <div class="glass-panel p-6 rounded-2xl md:col-span-2 flex flex-col">
-                    <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2 mb-4">Pending Verifications</h3>
+                <div class="glass-panel p-6 rounded-2xl md:col-span-2 flex flex-col mb-6">
+                    <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-white/10 pb-2 mb-4">Pending Verifications</h3>
                     <div id="requests-container" class="flex-grow overflow-y-auto space-y-3 pr-2">
                         <div class="text-center text-discord-muted py-10 flex flex-col items-center">
-                            <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50"></i>
+                            <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50 drop-shadow-md"></i>
                             <p>Loading requests...</p>
                         </div>
                     </div>
@@ -200,23 +220,17 @@
 
         <!-- CLAIM ADMIN VIEW -->
         <div id="view-claim-admin" class="w-full max-w-sm hidden animate-slide-in">
-            <div class="glass-panel p-8 rounded-2xl shadow-2xl text-center border border-discord-blurple">
-                <i class="fa-solid fa-crown text-5xl text-yellow-500 mb-4 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]"></i>
-                <h2 class="text-xl font-bold text-white mb-2">Initialize App</h2>
-                <p class="text-discord-muted mb-6 text-sm">No admin has been set for this portal. Click below to claim ownership. This tab will only be visible to you.</p>
-                <button id="btn-claim-admin" class="w-full bg-discord-blurple hover:bg-discord-blurpleHover text-white font-semibold py-3 rounded-md transition-all shadow-lg">
+            <div class="glass-panel p-8 rounded-2xl shadow-2xl text-center border border-discord-blurple/50">
+                <i class="fa-solid fa-crown text-5xl text-yellow-500 mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.6)]"></i>
+                <h2 class="text-xl font-bold text-white mb-2 drop-shadow-md">Initialize App</h2>
+                <p class="text-discord-text/80 mb-6 text-sm drop-shadow-sm">No admin has been set for this portal. Click below to claim ownership. This tab will only be visible to you.</p>
+                <button id="btn-claim-admin" class="w-full bg-discord-blurple hover:bg-discord-blurpleHover text-white font-semibold py-3 rounded-md transition-all shadow-[0_4px_14px_0_rgba(88,101,242,0.39)] hover:-translate-y-0.5">
                     Claim Admin Rights
                 </button>
             </div>
         </div>
 
     </main>
-
-    <!-- Background decoration -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-discord-blurple rounded-full blur-[150px] opacity-10"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-discord-green rounded-full blur-[120px] opacity-10"></div>
-    </div>
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
@@ -225,7 +239,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot, addDoc, updateDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Config Kamu
+        // FIREBASE BARU KAMU
         const firebaseConfig = {
             apiKey: "AIzaSyDomIAXu2J5j6ZA0Yl6qrhm96mwAKPOw20",
             authDomain: "dormz-member-access.firebaseapp.com",
@@ -245,7 +259,6 @@
         let isOwner = false;
         let currentTab = 'verify'; 
 
-        // Default Staff List
         const defaultStaff = [
             { name: "Zoyu", role: "Owner", online: true },
             { name: "Mod 1", role: "Moderator", online: false },
@@ -274,19 +287,19 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
-            let bgColor = 'bg-discord-card';
+            let bgColor = 'bg-discord-card/90 backdrop-blur-md border border-white/10';
             let icon = 'fa-circle-info text-discord-blurple';
             
             if (type === 'success') {
-                bgColor = 'bg-discord-card border-l-4 border-discord-green';
+                bgColor = 'bg-discord-card/90 backdrop-blur-md border border-white/10 border-l-4 border-l-discord-green';
                 icon = 'fa-circle-check text-discord-green';
             } else if (type === 'error') {
-                bgColor = 'bg-discord-card border-l-4 border-discord-red';
+                bgColor = 'bg-discord-card/90 backdrop-blur-md border border-white/10 border-l-4 border-l-discord-red';
                 icon = 'fa-circle-xmark text-discord-red';
             }
 
-            toast.className = `${bgColor} text-white px-4 py-3 rounded shadow-lg flex items-center gap-3 animate-slide-in min-w-[250px] z-50`;
-            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span class="text-sm">${message}</span>`;
+            toast.className = `${bgColor} text-white px-4 py-3 rounded shadow-xl flex items-center gap-3 animate-slide-in min-w-[250px] z-50`;
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span class="text-sm drop-shadow-sm">${message}</span>`;
             
             container.appendChild(toast);
             
@@ -321,7 +334,6 @@
                     uiElements.navServerName.textContent = appConfig.serverName || 'Discord Server';
                     uiElements.uiServerName.textContent = `Join ${appConfig.serverName || 'Discord Server'}`;
                     
-                    // Render Staff
                     const staffList = appConfig.staff || defaultStaff;
                     renderVerifyStaff(staffList);
                     if (isOwner) renderAdminStaff(staffList);
@@ -345,21 +357,20 @@
             listenToVerifications();
         }
 
-        // --- STAFF RENDER FUNCTIONS --- //
         function renderVerifyStaff(staffList) {
             const container = document.getElementById('ui-staff-container');
             container.innerHTML = '';
             staffList.forEach(function(staff) {
-                const statusColor = staff.online ? 'bg-discord-green' : 'bg-discord-muted';
+                const statusColor = staff.online ? 'bg-discord-green drop-shadow-[0_0_5px_rgba(35,165,89,0.8)]' : 'bg-discord-muted';
                 container.innerHTML += `
-                    <div class="flex items-center gap-3 bg-[#1e1f22] p-2.5 rounded-lg border border-[#2b2d31]">
+                    <div class="flex items-center gap-3 bg-[#1e1f22]/60 backdrop-blur-sm p-2.5 rounded-lg border border-white/5 hover:bg-[#1e1f22]/80 transition-colors">
                         <div class="relative flex-shrink-0">
-                            <div class="w-8 h-8 bg-discord-card rounded-full flex items-center justify-center text-discord-muted text-xs"><i class="fa-solid fa-user"></i></div>
+                            <div class="w-8 h-8 bg-discord-card/80 rounded-full flex items-center justify-center text-discord-muted text-xs border border-white/5"><i class="fa-solid fa-user"></i></div>
                             <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 ${statusColor} rounded-full border-2 border-[#1e1f22]"></div>
                         </div>
                         <div class="truncate">
-                            <p class="text-xs font-bold text-white truncate leading-tight">${staff.name}</p>
-                            <p class="text-[10px] text-discord-muted truncate">${staff.role}</p>
+                            <p class="text-xs font-bold text-white truncate leading-tight drop-shadow-sm">${staff.name}</p>
+                            <p class="text-[10px] text-discord-text/70 truncate">${staff.role}</p>
                         </div>
                     </div>
                 `;
@@ -374,14 +385,14 @@
             currentAdminStaff.forEach(function(staff, index) {
                 const isChecked = staff.online ? 'checked' : '';
                 container.innerHTML += `
-                    <div class="bg-[#1e1f22] p-2.5 rounded-md flex justify-between items-center border border-[#2b2d31]">
+                    <div class="bg-[#1e1f22]/60 p-2.5 rounded-md flex justify-between items-center border border-white/5 backdrop-blur-sm">
                         <div class="flex flex-col w-[60%]">
-                            <input type="text" id="staff-name-${index}" value="${staff.name}" class="bg-transparent text-white font-bold text-xs outline-none border-b border-gray-600 focus:border-discord-blurple mb-1 pb-0.5" placeholder="Name">
+                            <input type="text" id="staff-name-${index}" value="${staff.name}" class="bg-transparent text-white font-bold text-xs outline-none border-b border-white/20 focus:border-discord-blurple mb-1 pb-0.5" placeholder="Name">
                             <input type="text" id="staff-role-${index}" value="${staff.role}" class="bg-transparent text-[10px] text-discord-muted outline-none" placeholder="Role (e.g. Moderator)">
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="staff-online-${index}" class="sr-only peer" ${isChecked}>
-                            <div class="w-9 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-discord-green"></div>
+                            <div class="w-9 h-5 bg-discord-card/80 border border-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-discord-green shadow-inner"></div>
                         </label>
                     </div>
                 `;
@@ -411,7 +422,6 @@
             }
         }
         document.getElementById('btn-save-staff').addEventListener('click', saveStaffConfig);
-        // ------------------------------ //
 
         async function claimAdmin() {
             if (!currentUser) return;
@@ -482,7 +492,7 @@
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            content: `🔔 **VERIFIKASI BARU**\nUser Discord: \`${username}\` baru saja meminta akses masuk. Cek Admin Dashboard Web!`,
+                            content: `🔔 **VERIFIKASI BARU**\nUser Discord: \`${username}\` baru saja meminta akses masuk di web portal. Cek Admin Dashboard!`,
                         })
                     }).catch(function(err) {});
                 }
@@ -524,38 +534,38 @@
                 statusDiv.classList.remove('hidden');
                 
                 if (myRequest.status === 'pending') {
-                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-discord-card border border-yellow-500/30 text-left';
+                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-[#1e1f22]/80 backdrop-blur-md border border-yellow-500/30 text-left shadow-lg';
                     statusDiv.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-hourglass-half text-yellow-500 text-xl"></i>
+                            <i class="fa-solid fa-hourglass-half text-yellow-500 text-xl drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]"></i>
                             <div>
-                                <p class="text-white font-bold text-sm">Request Pending</p>
-                                <p class="text-xs text-discord-muted mt-1">Awaiting review for <strong>${myRequest.discordUsername}</strong>.</p>
+                                <p class="text-white font-bold text-sm drop-shadow-sm">Request Pending</p>
+                                <p class="text-xs text-discord-text/80 mt-1">Awaiting review for <strong>${myRequest.discordUsername}</strong>.</p>
                             </div>
                         </div>
                     `;
                 } else if (myRequest.status === 'approved') {
-                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-discord-card border border-discord-green/50 text-left';
+                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-[#1e1f22]/80 backdrop-blur-md border border-discord-green/50 text-left shadow-lg';
                     statusDiv.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-check text-discord-green text-xl"></i>
+                            <i class="fa-solid fa-circle-check text-discord-green text-xl drop-shadow-[0_0_5px_rgba(35,165,89,0.5)]"></i>
                             <div>
-                                <p class="text-white font-bold text-sm">Verification Approved!</p>
-                                <p class="text-xs text-discord-muted mt-1">Welcome to the server!</p>
+                                <p class="text-white font-bold text-sm drop-shadow-sm">Verification Approved!</p>
+                                <p class="text-xs text-discord-text/80 mt-1">Welcome to the server!</p>
                             </div>
                         </div>
                     `;
                 } else if (myRequest.status === 'rejected') {
-                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-discord-card border border-discord-red/50 text-left';
+                    statusDiv.className = 'mb-6 p-4 rounded-lg bg-[#1e1f22]/80 backdrop-blur-md border border-discord-red/50 text-left shadow-lg';
                     statusDiv.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-xmark text-discord-red text-xl"></i>
+                            <i class="fa-solid fa-circle-xmark text-discord-red text-xl drop-shadow-[0_0_5px_rgba(218,55,60,0.5)]"></i>
                             <div>
-                                <p class="text-white font-bold text-sm">Verification Rejected</p>
-                                <p class="text-xs text-discord-muted mt-1">Your request was denied.</p>
+                                <p class="text-white font-bold text-sm drop-shadow-sm">Verification Rejected</p>
+                                <p class="text-xs text-discord-text/80 mt-1">Your request was denied.</p>
                             </div>
                         </div>
-                        <button onclick="window.resetVerification('${myRequest.id}')" class="mt-3 text-xs bg-discord-hover px-3 py-1.5 rounded hover:bg-gray-600 transition text-white">Try Again</button>
+                        <button onclick="window.resetVerification('${myRequest.id}')" class="mt-3 text-xs bg-discord-hover/80 border border-white/10 px-3 py-1.5 rounded hover:bg-gray-600 transition text-white shadow-sm backdrop-blur-sm">Try Again</button>
                     `;
                 }
             } else {
@@ -582,8 +592,8 @@
             if (requests.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-discord-muted py-10 flex flex-col items-center">
-                        <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50"></i>
-                        <p class="text-sm">No verification requests yet.</p>
+                        <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50 drop-shadow-md"></i>
+                        <p class="text-sm drop-shadow-sm">No verification requests yet.</p>
                     </div>`;
                 return;
             }
@@ -594,27 +604,27 @@
                 let actionButtons = '';
                 
                 if (req.status === 'pending') {
-                    statusBadge = `<span class="bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Pending</span>`;
+                    statusBadge = `<span class="bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Pending</span>`;
                     actionButtons = `
-                        <button onclick="window.updateRequestStatus('${req.id}', 'approved', '${req.discordUsername}')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-green text-white transition-colors flex items-center justify-center" title="Approve"><i class="fa-solid fa-check"></i></button>
-                        <button onclick="window.updateRequestStatus('${req.id}', 'rejected', '${req.discordUsername}')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-red text-white transition-colors flex items-center justify-center" title="Reject"><i class="fa-solid fa-xmark"></i></button>
+                        <button onclick="window.updateRequestStatus('${req.id}', 'approved', '${req.discordUsername}')" class="w-8 h-8 rounded bg-discord-card/80 border border-white/5 hover:border-discord-green hover:text-discord-green hover:bg-[#1e1f22] text-white transition-all flex items-center justify-center shadow-sm backdrop-blur-sm" title="Approve"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="window.updateRequestStatus('${req.id}', 'rejected', '${req.discordUsername}')" class="w-8 h-8 rounded bg-discord-card/80 border border-white/5 hover:border-discord-red hover:text-discord-red hover:bg-[#1e1f22] text-white transition-all flex items-center justify-center shadow-sm backdrop-blur-sm" title="Reject"><i class="fa-solid fa-xmark"></i></button>
                     `;
                 } else if (req.status === 'approved') {
-                    statusBadge = `<span class="bg-discord-green/20 text-discord-green text-[10px] px-2 py-0.5 rounded font-bold uppercase">Approved</span>`;
-                    actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline">Delete</button>`;
+                    statusBadge = `<span class="bg-discord-green/20 text-discord-green border border-discord-green/30 text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Approved</span>`;
+                    actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline drop-shadow-sm">Delete</button>`;
                 } else {
-                    statusBadge = `<span class="bg-discord-red/20 text-discord-red text-[10px] px-2 py-0.5 rounded font-bold uppercase">Rejected</span>`;
-                    actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline">Delete</button>`;
+                    statusBadge = `<span class="bg-discord-red/20 text-discord-red border border-discord-red/30 text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Rejected</span>`;
+                    actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline drop-shadow-sm">Delete</button>`;
                 }
 
                 const el = document.createElement('div');
-                el.className = 'bg-[#1e1f22] p-3 rounded-lg flex items-center justify-between border border-transparent hover:border-[#3f4147] transition-colors';
+                el.className = 'bg-[#1e1f22]/60 backdrop-blur-sm p-3 rounded-lg flex items-center justify-between border border-white/5 hover:border-white/20 transition-all shadow-sm';
                 el.innerHTML = `
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <div class="w-10 h-10 rounded-full bg-discord-card flex items-center justify-center text-discord-muted flex-shrink-0"><i class="fa-brands fa-discord text-xl"></i></div>
+                        <div class="w-10 h-10 rounded-full bg-discord-card/80 border border-white/5 flex items-center justify-center text-discord-muted flex-shrink-0 shadow-inner"><i class="fa-brands fa-discord text-xl"></i></div>
                         <div class="truncate">
-                            <div class="flex items-center gap-2"><p class="text-white font-semibold text-sm truncate">${req.discordUsername}</p>${statusBadge}</div>
-                            <p class="text-[10px] text-discord-muted">${date}</p>
+                            <div class="flex items-center gap-2"><p class="text-white font-semibold text-sm truncate drop-shadow-sm">${req.discordUsername}</p>${statusBadge}</div>
+                            <p class="text-[10px] text-discord-text/70 drop-shadow-sm">${date}</p>
                         </div>
                     </div>
                     <div class="flex gap-2 ml-4 flex-shrink-0">${actionButtons}</div>
@@ -633,7 +643,7 @@
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            content: `✅ Akses web untuk \`${discordName}\` **Telah Disetujui**!`,
+                            content: `✅ User \`${discordName}\` **Telah Diverifikasi** via Web Portal! Berikan rolenya sekarang.`,
                         })
                     }).catch(function(e){});
                 }
@@ -655,15 +665,13 @@
             currentTab = tabName;
             Object.keys(views).forEach(function(key) { if(views[key]) views[key].classList.add('hidden'); });
             
-            tabs.verify.classList.replace('bg-discord-hover', 'bg-transparent');
-            tabs.verify.classList.replace('text-white', 'text-discord-muted');
-            tabs.admin.classList.replace('bg-discord-hover', 'bg-transparent');
-            tabs.admin.classList.replace('text-white', 'text-discord-muted');
+            // Reset Tab Button Styling
+            tabs.verify.className = 'px-4 py-2 rounded-md hover:bg-discord-hover/80 text-discord-muted hover:text-white font-medium transition-colors border border-transparent';
+            if(tabs.admin) tabs.admin.className = 'px-4 py-2 rounded-md hover:bg-discord-hover/80 text-discord-muted hover:text-white font-medium transition-colors border border-transparent';
 
             if (views[tabName]) views[tabName].classList.remove('hidden');
             if (tabs[tabName]) {
-                tabs[tabName].classList.replace('bg-transparent', 'bg-discord-hover');
-                tabs[tabName].classList.replace('text-discord-muted', 'text-white');
+                tabs[tabName].className = 'px-4 py-2 rounded-md bg-discord-blurple/80 backdrop-blur-sm text-white font-medium transition-colors border border-discord-blurple shadow-sm';
             }
         }
 
