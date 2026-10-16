@@ -91,7 +91,7 @@
     <main class="flex-grow flex items-center justify-center p-4 z-10" id="main-container">
         
         <!-- VERIFY VIEW -->
-        <div id="view-verify" class="w-full max-w-md animate-slide-in">
+        <div id="view-verify" class="w-full max-w-md animate-slide-in my-8">
             <div class="glass-panel p-8 rounded-2xl shadow-2xl text-center">
                 <div class="w-24 h-24 bg-[#1e1f22] rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-[#2b2d31] relative">
                     <i class="fa-solid fa-shield-halved text-4xl text-discord-green"></i>
@@ -99,7 +99,7 @@
                 </div>
                 
                 <h2 class="text-2xl font-bold text-white mb-2" id="ui-server-name">Join Our Server</h2>
-                <p class="text-discord-muted mb-8 text-sm">To gain full access to the server, please complete the verification process below. This helps us keep the community safe.</p>
+                <p class="text-discord-muted mb-6 text-sm">To gain full access to the server, please complete the verification process below.</p>
 
                 <div id="verify-status" class="hidden mb-6 p-4 rounded-lg bg-discord-hover text-left">
                     <!-- Status injected here -->
@@ -123,11 +123,19 @@
                         <i class="fa-solid fa-paper-plane"></i> Submit Verification
                     </button>
                 </form>
+
+                <!-- NEW: STAFF STATUS SECTION -->
+                <div class="mt-8 border-t border-[#3f4147] pt-6 text-left">
+                    <h3 class="text-[11px] font-bold text-discord-muted uppercase mb-3 tracking-wider"><i class="fa-solid fa-users mr-1"></i> Staff Status</h3>
+                    <div id="ui-staff-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <!-- Staff cards injected via JS -->
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- ADMIN VIEW -->
-        <div id="view-admin" class="w-full max-w-4xl hidden animate-slide-in h-[80vh] flex flex-col">
+        <div id="view-admin" class="w-full max-w-5xl hidden animate-slide-in h-[85vh] flex flex-col">
             <div class="flex justify-between items-end mb-6">
                 <div>
                     <h2 class="text-3xl font-bold text-white">Admin Dashboard</h2>
@@ -136,25 +144,48 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow min-h-0">
-                <div class="glass-panel p-6 rounded-2xl flex flex-col gap-5 overflow-y-auto">
-                    <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2">Configuration</h3>
+                
+                <!-- KIRI: CONFIG & STAFF -->
+                <div class="flex flex-col gap-6 overflow-y-auto pr-2">
                     
-                    <div>
-                        <label class="block text-xs font-bold text-discord-muted uppercase mb-2">Server Name</label>
-                        <input type="text" id="admin-server-name" class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all">
+                    <!-- Config Panel -->
+                    <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4">
+                        <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2">Configuration</h3>
+                        
+                        <div>
+                            <label class="block text-[10px] font-bold text-discord-muted uppercase mb-1">Server Name</label>
+                            <input type="text" id="admin-server-name" class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-discord-muted uppercase mb-1">Discord Webhook URL</label>
+                            <input type="password" id="admin-webhook" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm">
+                        </div>
+
+                        <button id="btn-save-config" class="mt-2 w-full bg-discord-green hover:bg-[#1f904d] text-white font-semibold py-2 rounded-md transition-all text-sm">
+                            Save Settings
+                        </button>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-discord-muted uppercase mb-2">Discord Webhook URL</label>
-                        <input type="password" id="admin-webhook" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-[#1e1f22] text-white border-none rounded-md py-2 px-3 focus:ring-2 focus:ring-discord-blurple outline-none transition-all text-sm">
-                        <p class="text-[10px] text-discord-muted mt-1">Used to send logs directly to your Discord channel.</p>
+                    <!-- Staff Management Panel -->
+                    <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2">Staff Status</h3>
+                            <p class="text-[10px] text-discord-muted mt-1">Toggle online status for the public page.</p>
+                        </div>
+                        
+                        <div id="admin-staff-container" class="space-y-2">
+                            <!-- Admin staff inputs injected via JS -->
+                        </div>
+
+                        <button id="btn-save-staff" class="mt-2 w-full bg-discord-blurple hover:bg-discord-blurpleHover text-white font-semibold py-2 rounded-md transition-all text-sm">
+                            Update Staff Status
+                        </button>
                     </div>
 
-                    <button id="btn-save-config" class="mt-auto w-full bg-discord-green hover:bg-[#1f904d] text-white font-semibold py-2 rounded-md transition-all">
-                        Save Settings
-                    </button>
                 </div>
 
+                <!-- KANAN: PENDING VERIFICATIONS -->
                 <div class="glass-panel p-6 rounded-2xl md:col-span-2 flex flex-col">
                     <h3 class="text-lg font-bold text-white uppercase tracking-wider text-sm border-b border-gray-700 pb-2 mb-4">Pending Verifications</h3>
                     <div id="requests-container" class="flex-grow overflow-y-auto space-y-3 pr-2">
@@ -194,7 +225,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot, addDoc, updateDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase BARU (dormz-member-access)
+        // Firebase Config Kamu
         const firebaseConfig = {
             apiKey: "AIzaSyDomIAXu2J5j6ZA0Yl6qrhm96mwAKPOw20",
             authDomain: "dormz-member-access.firebaseapp.com",
@@ -213,6 +244,13 @@
         let appConfig = null;
         let isOwner = false;
         let currentTab = 'verify'; 
+
+        // Default Staff List
+        const defaultStaff = [
+            { name: "Zoyu", role: "Owner", online: true },
+            { name: "Mod 1", role: "Moderator", online: false },
+            { name: "Mod 2", role: "Moderator", online: false }
+        ];
 
         const views = {
             verify: document.getElementById('view-verify'),
@@ -247,8 +285,8 @@
                 icon = 'fa-circle-xmark text-discord-red';
             }
 
-            toast.className = `${bgColor} text-white px-4 py-3 rounded shadow-lg flex items-center gap-3 animate-slide-in min-w-[250px]`;
-            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            toast.className = `${bgColor} text-white px-4 py-3 rounded shadow-lg flex items-center gap-3 animate-slide-in min-w-[250px] z-50`;
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span class="text-sm">${message}</span>`;
             
             container.appendChild(toast);
             
@@ -256,9 +294,7 @@
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateY(10px)';
                 toast.style.transition = 'all 0.3s ease';
-                setTimeout(function() {
-                    toast.remove();
-                }, 300);
+                setTimeout(function() { toast.remove(); }, 300);
             }, 3000);
         }
 
@@ -266,7 +302,6 @@
             try {
                 await signInAnonymously(auth);
                 currentUser = auth.currentUser;
-                console.log("Login sukses. UID:", currentUser.uid);
                 listenToConfig();
             } catch (error) {
                 console.error("Auth Error:", error);
@@ -276,7 +311,6 @@
 
         function listenToConfig() {
             if (!currentUser) return;
-
             const docRef = doc(db, "verify_portal", "main_config");
             
             onSnapshot(docRef, function(snapshot) {
@@ -287,31 +321,97 @@
                     uiElements.navServerName.textContent = appConfig.serverName || 'Discord Server';
                     uiElements.uiServerName.textContent = `Join ${appConfig.serverName || 'Discord Server'}`;
                     
+                    // Render Staff
+                    const staffList = appConfig.staff || defaultStaff;
+                    renderVerifyStaff(staffList);
+                    if (isOwner) renderAdminStaff(staffList);
+
                     if (isOwner) {
                         tabs.admin.classList.remove('hidden');
                         if (!uiElements.adminServerName.value) uiElements.adminServerName.value = appConfig.serverName || '';
                         if (!uiElements.adminWebhook.value) uiElements.adminWebhook.value = appConfig.webhookUrl || '';
                     } else {
                         tabs.admin.classList.add('hidden');
-                        if (currentTab === 'admin') {
-                            switchTab('verify'); 
-                        }
+                        if (currentTab === 'admin') switchTab('verify'); 
                     }
                     
-                    if (currentTab === 'claim') {
-                        switchTab('verify');
-                    }
+                    if (currentTab === 'claim') switchTab('verify');
                 } else {
                     appConfig = null;
                     isOwner = false;
                     switchTab('claim');
                 }
-            }, function(error) {
-                console.error("Error database:", error);
             });
-            
             listenToVerifications();
         }
+
+        // --- STAFF RENDER FUNCTIONS --- //
+        function renderVerifyStaff(staffList) {
+            const container = document.getElementById('ui-staff-container');
+            container.innerHTML = '';
+            staffList.forEach(function(staff) {
+                const statusColor = staff.online ? 'bg-discord-green' : 'bg-discord-muted';
+                container.innerHTML += `
+                    <div class="flex items-center gap-3 bg-[#1e1f22] p-2.5 rounded-lg border border-[#2b2d31]">
+                        <div class="relative flex-shrink-0">
+                            <div class="w-8 h-8 bg-discord-card rounded-full flex items-center justify-center text-discord-muted text-xs"><i class="fa-solid fa-user"></i></div>
+                            <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 ${statusColor} rounded-full border-2 border-[#1e1f22]"></div>
+                        </div>
+                        <div class="truncate">
+                            <p class="text-xs font-bold text-white truncate leading-tight">${staff.name}</p>
+                            <p class="text-[10px] text-discord-muted truncate">${staff.role}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        let currentAdminStaff = [];
+        function renderAdminStaff(staffList) {
+            currentAdminStaff = JSON.parse(JSON.stringify(staffList));
+            const container = document.getElementById('admin-staff-container');
+            container.innerHTML = '';
+            currentAdminStaff.forEach(function(staff, index) {
+                const isChecked = staff.online ? 'checked' : '';
+                container.innerHTML += `
+                    <div class="bg-[#1e1f22] p-2.5 rounded-md flex justify-between items-center border border-[#2b2d31]">
+                        <div class="flex flex-col w-[60%]">
+                            <input type="text" id="staff-name-${index}" value="${staff.name}" class="bg-transparent text-white font-bold text-xs outline-none border-b border-gray-600 focus:border-discord-blurple mb-1 pb-0.5" placeholder="Name">
+                            <input type="text" id="staff-role-${index}" value="${staff.role}" class="bg-transparent text-[10px] text-discord-muted outline-none" placeholder="Role (e.g. Moderator)">
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="staff-online-${index}" class="sr-only peer" ${isChecked}>
+                            <div class="w-9 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-discord-green"></div>
+                        </label>
+                    </div>
+                `;
+            });
+        }
+
+        async function saveStaffConfig() {
+            if (!currentUser || !isOwner) return;
+            const btn = document.getElementById('btn-save-staff');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+            
+            const newStaff = currentAdminStaff.map(function(_, index) {
+                return {
+                    name: document.getElementById(`staff-name-${index}`).value || 'Unknown',
+                    role: document.getElementById(`staff-role-${index}`).value || 'Staff',
+                    online: document.getElementById(`staff-online-${index}`).checked
+                };
+            });
+
+            try {
+                await updateDoc(doc(db, "verify_portal", "main_config"), { staff: newStaff });
+                showToast("Staff status updated!", "success");
+            } catch (error) {
+                showToast("Failed to update staff.", "error");
+            } finally {
+                btn.innerHTML = 'Update Staff Status';
+            }
+        }
+        document.getElementById('btn-save-staff').addEventListener('click', saveStaffConfig);
+        // ------------------------------ //
 
         async function claimAdmin() {
             if (!currentUser) return;
@@ -321,12 +421,12 @@
                     adminUid: currentUser.uid,
                     serverName: "My Discord Server",
                     webhookUrl: "",
+                    staff: defaultStaff,
                     createdAt: serverTimestamp()
                 });
                 showToast("Berhasil jadi Admin!", "success");
                 switchTab('admin');
             } catch (error) {
-                console.error("Claim error:", error);
                 showToast("Gagal klaim admin.", "error");
             }
         }
@@ -336,15 +436,13 @@
             const btn = document.getElementById('btn-save-config');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
             
-            const docRef = doc(db, "verify_portal", "main_config");
             try {
-                await updateDoc(docRef, {
+                await updateDoc(doc(db, "verify_portal", "main_config"), {
                     serverName: uiElements.adminServerName.value.trim(),
                     webhookUrl: uiElements.adminWebhook.value.trim()
                 });
                 showToast("Pengaturan disimpan!", "success");
             } catch (error) {
-                console.error("Save config error:", error);
                 showToast("Gagal menyimpan.", "error");
             } finally {
                 btn.innerHTML = 'Save Settings';
@@ -384,15 +482,12 @@
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            content: `🔔 **VERIFIKASI BARU**\nUser Discord: \`${username}\` baru saja meminta verifikasi di web portal. Cek Admin Dashboard!`,
+                            content: `🔔 **VERIFIKASI BARU**\nUser Discord: \`${username}\` baru saja meminta akses masuk. Cek Admin Dashboard Web!`,
                         })
-                    }).catch(function(err) {
-                        console.log("Webhook error", err);
-                    });
+                    }).catch(function(err) {});
                 }
 
             } catch (error) {
-                console.error("Verification submit error:", error);
                 showToast("Gagal mengirim data.", "error");
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Verification';
@@ -405,33 +500,22 @@
         function listenToVerifications() {
             if (!currentUser) return;
             const verifCollection = collection(db, "verify_portal", "main_config", "requests");
-            
-            if (unsubscribeVerifications) {
-                unsubscribeVerifications();
-            }
+            if (unsubscribeVerifications) unsubscribeVerifications();
             
             unsubscribeVerifications = onSnapshot(verifCollection, function(snapshot) {
                 const requests = [];
                 snapshot.forEach(function(doc) {
                     requests.push({ id: doc.id, ...doc.data() });
                 });
-                
-                requests.sort(function(a, b) {
-                    return (b.timestamp || 0) - (a.timestamp || 0);
-                });
+                requests.sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); });
                 
                 renderAdminRequests(requests);
                 checkUserStatus(requests);
-            }, function(error) {
-                console.error("Listen verifications error:", error);
             });
         }
 
         function checkUserStatus(requests) {
-            const myRequest = requests.find(function(req) {
-                return req.uid === currentUser.uid;
-            });
-            
+            const myRequest = requests.find(function(req) { return req.uid === currentUser.uid; });
             const form = document.getElementById('verify-form');
             const statusDiv = document.getElementById('verify-status');
             
@@ -445,7 +529,7 @@
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-hourglass-half text-yellow-500 text-xl"></i>
                             <div>
-                                <p class="text-white font-bold">Request Pending</p>
+                                <p class="text-white font-bold text-sm">Request Pending</p>
                                 <p class="text-xs text-discord-muted mt-1">Awaiting review for <strong>${myRequest.discordUsername}</strong>.</p>
                             </div>
                         </div>
@@ -456,7 +540,7 @@
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-circle-check text-discord-green text-xl"></i>
                             <div>
-                                <p class="text-white font-bold">Verification Approved!</p>
+                                <p class="text-white font-bold text-sm">Verification Approved!</p>
                                 <p class="text-xs text-discord-muted mt-1">Welcome to the server!</p>
                             </div>
                         </div>
@@ -467,11 +551,11 @@
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-circle-xmark text-discord-red text-xl"></i>
                             <div>
-                                <p class="text-white font-bold">Verification Rejected</p>
+                                <p class="text-white font-bold text-sm">Verification Rejected</p>
                                 <p class="text-xs text-discord-muted mt-1">Your request was denied.</p>
                             </div>
                         </div>
-                        <button onclick="window.resetVerification('${myRequest.id}')" class="mt-3 text-xs bg-discord-hover px-3 py-1 rounded hover:bg-gray-600 transition text-white">Try Again</button>
+                        <button onclick="window.resetVerification('${myRequest.id}')" class="mt-3 text-xs bg-discord-hover px-3 py-1.5 rounded hover:bg-gray-600 transition text-white">Try Again</button>
                     `;
                 }
             } else {
@@ -486,12 +570,8 @@
 
         window.resetVerification = async function(docId) {
             if(!currentUser) return;
-            try {
-                const docRef = doc(db, "verify_portal", "main_config", "requests", docId);
-                await deleteDoc(docRef);
-            } catch (error) { 
-                console.error("Reset error:", error); 
-            }
+            try { await deleteDoc(doc(db, "verify_portal", "main_config", "requests", docId)); } 
+            catch (error) {}
         };
 
         function renderAdminRequests(requests) {
@@ -503,7 +583,7 @@
                 container.innerHTML = `
                     <div class="text-center text-discord-muted py-10 flex flex-col items-center">
                         <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50"></i>
-                        <p>No verification requests yet.</p>
+                        <p class="text-sm">No verification requests yet.</p>
                     </div>`;
                 return;
             }
@@ -514,26 +594,26 @@
                 let actionButtons = '';
                 
                 if (req.status === 'pending') {
-                    statusBadge = `<span class="bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-1 rounded font-bold uppercase">Pending</span>`;
+                    statusBadge = `<span class="bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Pending</span>`;
                     actionButtons = `
-                        <button onclick="window.updateRequestStatus('${req.id}', 'approved')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-green text-white transition-colors flex items-center justify-center" title="Approve"><i class="fa-solid fa-check"></i></button>
-                        <button onclick="window.updateRequestStatus('${req.id}', 'rejected')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-red text-white transition-colors flex items-center justify-center" title="Reject"><i class="fa-solid fa-xmark"></i></button>
+                        <button onclick="window.updateRequestStatus('${req.id}', 'approved', '${req.discordUsername}')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-green text-white transition-colors flex items-center justify-center" title="Approve"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="window.updateRequestStatus('${req.id}', 'rejected', '${req.discordUsername}')" class="w-8 h-8 rounded bg-discord-hover hover:bg-discord-red text-white transition-colors flex items-center justify-center" title="Reject"><i class="fa-solid fa-xmark"></i></button>
                     `;
                 } else if (req.status === 'approved') {
-                    statusBadge = `<span class="bg-discord-green/20 text-discord-green text-[10px] px-2 py-1 rounded font-bold uppercase">Approved</span>`;
+                    statusBadge = `<span class="bg-discord-green/20 text-discord-green text-[10px] px-2 py-0.5 rounded font-bold uppercase">Approved</span>`;
                     actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline">Delete</button>`;
                 } else {
-                    statusBadge = `<span class="bg-discord-red/20 text-discord-red text-[10px] px-2 py-1 rounded font-bold uppercase">Rejected</span>`;
+                    statusBadge = `<span class="bg-discord-red/20 text-discord-red text-[10px] px-2 py-0.5 rounded font-bold uppercase">Rejected</span>`;
                     actionButtons = `<button onclick="window.deleteRequest('${req.id}')" class="text-xs text-discord-muted hover:text-white underline">Delete</button>`;
                 }
 
                 const el = document.createElement('div');
-                el.className = 'bg-[#1e1f22] p-4 rounded-lg flex items-center justify-between border border-transparent hover:border-[#3f4147] transition-colors';
+                el.className = 'bg-[#1e1f22] p-3 rounded-lg flex items-center justify-between border border-transparent hover:border-[#3f4147] transition-colors';
                 el.innerHTML = `
                     <div class="flex items-center gap-3 overflow-hidden">
                         <div class="w-10 h-10 rounded-full bg-discord-card flex items-center justify-center text-discord-muted flex-shrink-0"><i class="fa-brands fa-discord text-xl"></i></div>
                         <div class="truncate">
-                            <div class="flex items-center gap-2"><p class="text-white font-semibold truncate">${req.discordUsername}</p>${statusBadge}</div>
+                            <div class="flex items-center gap-2"><p class="text-white font-semibold text-sm truncate">${req.discordUsername}</p>${statusBadge}</div>
                             <p class="text-[10px] text-discord-muted">${date}</p>
                         </div>
                     </div>
@@ -543,26 +623,22 @@
             });
         }
 
-        window.updateRequestStatus = async function(docId, newStatus) {
+        window.updateRequestStatus = async function(docId, newStatus, discordName) {
             if (!currentUser || !isOwner) return;
             try {
-                const docRef = doc(db, "verify_portal", "main_config", "requests", docId);
-                await updateDoc(docRef, { status: newStatus });
+                await updateDoc(doc(db, "verify_portal", "main_config", "requests", docId), { status: newStatus });
                 
                 if (newStatus === 'approved' && appConfig && appConfig.webhookUrl) {
                     fetch(appConfig.webhookUrl, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            content: `✅ User **telah diverifikasi** via Web Portal!`,
+                            content: `✅ Akses web untuk \`${discordName}\` **Telah Disetujui**!`,
                         })
-                    }).catch(function(e) {
-                        console.log(e);
-                    });
+                    }).catch(function(e){});
                 }
                 showToast(`Status diubah jadi ${newStatus}!`, newStatus === 'approved' ? 'success' : 'info');
             } catch (error) {
-                console.error("Update status error:", error);
                 showToast("Gagal ubah status.", "error");
             }
         };
@@ -570,47 +646,29 @@
         window.deleteRequest = async function(docId) {
             if (!currentUser || !isOwner) return;
             try {
-                const docRef = doc(db, "verify_portal", "main_config", "requests", docId);
-                await deleteDoc(docRef);
+                await deleteDoc(doc(db, "verify_portal", "main_config", "requests", docId));
                 showToast("Data dihapus.", "info");
-            } catch (error) { 
-                console.error("Delete error:", error); 
-            }
+            } catch (error) {}
         };
 
         function switchTab(tabName) {
             currentTab = tabName;
-            
-            Object.keys(views).forEach(function(key) {
-                if (views[key]) {
-                    views[key].classList.add('hidden');
-                }
-            });
+            Object.keys(views).forEach(function(key) { if(views[key]) views[key].classList.add('hidden'); });
             
             tabs.verify.classList.replace('bg-discord-hover', 'bg-transparent');
             tabs.verify.classList.replace('text-white', 'text-discord-muted');
             tabs.admin.classList.replace('bg-discord-hover', 'bg-transparent');
             tabs.admin.classList.replace('text-white', 'text-discord-muted');
 
-            if (views[tabName]) {
-                views[tabName].classList.remove('hidden');
-            }
-            
+            if (views[tabName]) views[tabName].classList.remove('hidden');
             if (tabs[tabName]) {
                 tabs[tabName].classList.replace('bg-transparent', 'bg-discord-hover');
                 tabs[tabName].classList.replace('text-discord-muted', 'text-white');
             }
         }
 
-        tabs.verify.addEventListener('click', function() {
-            switchTab('verify');
-        });
-        
-        tabs.admin.addEventListener('click', function() {
-            if (isOwner) {
-                switchTab('admin');
-            }
-        });
+        tabs.verify.addEventListener('click', function() { switchTab('verify'); });
+        tabs.admin.addEventListener('click', function() { if (isOwner) switchTab('admin'); });
         
         document.getElementById('btn-claim-admin').addEventListener('click', claimAdmin);
         document.getElementById('btn-save-config').addEventListener('click', saveConfig);
