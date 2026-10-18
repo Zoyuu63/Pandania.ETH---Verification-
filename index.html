@@ -10,40 +10,36 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
         
         body {
-            background-color: #09090b; /* Warna Void / Hitam pekat */
+            background-color: #09090b;
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
-            color: #e4e4e7; /* Ash white */
+            color: #e4e4e7;
         }
 
-        /* Top Navbar (Ditaruh paling atas pakai z-index tinggi) */
         .top-bar {
             background-color: #09090b;
             border-bottom: 1px solid #27272a;
         }
 
-        /* Main Card */
         .main-card {
-            background-color: #18181b; /* Ash dark */
-            border: 1px solid #27272a; /* Garis abu-abu mati */
+            background-color: #18181b;
+            border: 1px solid #27272a;
             border-radius: 2rem;
             box-shadow: 0 20px 40px -10px rgba(0,0,0,0.7);
         }
 
-        /* Input Fields */
         .input-dark {
-            background-color: #09090b; /* Void */
+            background-color: #09090b;
             color: #ffffff;
             border: 1px solid #27272a;
             transition: all 0.3s ease;
         }
         .input-dark:focus {
             outline: none;
-            border-color: #71717a; /* Ash light saat diklik */
+            border-color: #71717a;
             box-shadow: 0 0 15px rgba(113, 113, 122, 0.1);
         }
 
-        /* OTP Boxes */
         .otp-box {
             width: 45px;
             height: 55px;
@@ -56,21 +52,19 @@
             transition: all 0.2s ease;
         }
         .otp-box:focus {
-            border-color: #a1a1aa; /* Ash silver */
+            border-color: #a1a1aa;
             outline: none;
             box-shadow: 0 0 12px rgba(161, 161, 170, 0.2);
         }
 
-        /* Sidebar Transition */
         #sidebar {
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         #overlay {
             transition: opacity 0.4s ease;
-            backdrop-filter: blur(4px); /* Efek blur kaca di background */
+            backdrop-filter: blur(4px);
         }
 
-        /* Staff Status Dots */
         .status-dot {
             position: absolute;
             bottom: 0;
@@ -81,44 +75,27 @@
             border: 2px solid #18181b;
         }
 
-        /* Custom Scrollbar untuk Sidebar */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #09090b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #3f3f46;
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative">
 
-    <!-- Musik Background (Bisa diganti link mp3 nya) -->
     <audio id="bgMusic" loop>
-        <!-- Link lagu lofi di bawah ini bisa kamu ganti dengan link mp3 pilihanmu -->
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Navbar Atas (z-[60] supaya selalu di atas sidebar) -->
     <nav class="top-bar w-full h-16 flex items-center justify-between px-4 sm:px-6 fixed top-0 z-[60]">
         <div class="flex gap-5">
-            <!-- Tombol Sidebar -->
             <button onclick="toggleSidebar()" class="text-[#71717a] hover:text-white transition text-2xl">
                 <i class="fas fa-user-alt"></i>
             </button>
-            
-            <!-- Tombol Musik -->
             <button onclick="toggleMusic()" id="musicBtn" class="text-[#71717a] hover:text-white transition text-2xl relative">
                 <i class="fas fa-music"></i>
-                <!-- Tanda silang X (Hidden by default, muncul saat musik mati) -->
                 <i id="musicCross" class="fas fa-times absolute -bottom-1 -right-2 text-[12px] text-red-500 font-bold"></i>
             </button>
         </div>
-        
-        <!-- Tombol Gerigi Admin (Hidden by default, diatur lewat JS) -->
         <div id="adminContainer" class="hidden">
             <button onclick="toggleAdminLogs()" class="text-[#71717a] hover:text-white transition text-2xl">
                 <i class="fas fa-cog"></i>
@@ -126,10 +103,8 @@
         </div>
     </nav>
 
-    <!-- Overlay Gelap untuk Sidebar (z-[40] di bawah sidebar) -->
     <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-[40] opacity-0 pointer-events-none hidden"></div>
 
-    <!-- Sidebar (z-[50] ada di Bawah Navbar tapi di Atas Overlay) -->
     <aside id="sidebar" class="fixed top-0 left-0 h-full w-72 bg-[#121214] shadow-2xl z-[50] transform -translate-x-full flex flex-col pt-20 border-r border-[#27272a]">
         <div class="p-4 border-b border-[#27272a]">
             <p class="text-[10px] font-bold text-center tracking-widest text-[#a1a1aa] uppercase">
@@ -141,9 +116,10 @@
             <h3 class="text-[10px] font-bold text-[#52525b] uppercase tracking-widest mb-2 mt-2">Server Staff</h3>
             
             <div id="staffList" class="space-y-2">
-                <!-- Zoyu -->
+                <!-- GANTI NAMA & FOTO OWNER DI SINI -->
                 <div class="flex items-center gap-3 bg-[#18181b] p-2.5 rounded-lg border border-[#27272a]">
                     <div class="relative">
+                        <!-- Link gambar bisa diganti link foto profil aslimu -->
                         <img src="https://ui-avatars.com/api/?name=Zoyu&background=27272a&color=fff" class="w-9 h-9 rounded-lg grayscale">
                         <div id="status-zoyu" class="status-dot bg-[#71717a]"></div>
                     </div>
@@ -152,9 +128,11 @@
                         <p class="text-[10px] text-[#71717a]">Owner</p>
                     </div>
                 </div>
-                <!-- Mods -->
+                
+                <!-- GANTI NAMA & FOTO MODERATOR DI SINI -->
                 <div class="flex items-center gap-3 bg-[#18181b] p-2.5 rounded-lg border border-[#27272a]">
                     <div class="relative">
+                        <!-- Link gambar bisa diganti link foto profil aslimu -->
                         <img src="https://ui-avatars.com/api/?name=Jouhan&background=27272a&color=fff" class="w-9 h-9 rounded-lg grayscale">
                         <div id="status-jouhan" class="status-dot bg-[#71717a]"></div>
                     </div>
@@ -165,38 +143,33 @@
                 </div>
             </div>
 
-            <!-- Members Note -->
             <div class="mt-8 p-4 rounded-lg border border-[#27272a] border-dashed text-center">
                 <p class="text-[10px] text-[#71717a] leading-relaxed">Verified members list is hidden to maintain performance. View the full list on Discord.</p>
             </div>
         </div>
     </aside>
 
-    <!-- Main Content Area -->
     <main class="flex-grow flex items-center justify-center p-4 pt-20 pb-16 relative z-10">
         
-        <!-- STEP 1: Username Input Form -->
         <div id="step1-card" class="main-card w-full max-w-sm p-8 flex flex-col items-center relative transition-all duration-500">
             
-            <!-- Bot Status Pill -->
             <div id="botStatusBadge" class="absolute -top-3 bg-[#09090b] px-4 py-1.5 rounded-full border border-[#27272a] text-[10px] font-bold text-[#a1a1aa] shadow-lg flex items-center gap-2">
                 <i class="fas fa-circle-notch fa-spin"></i> checking status
             </div>
 
-            <!-- Profile Picture -->
+            <!-- GANTI FOTO PROFIL SERVER DI SINI -->
             <div class="w-20 h-20 bg-[#27272a] rounded-2xl p-1 shadow-2xl mb-5 mt-4">
                 <div class="w-full h-full bg-[#09090b] rounded-xl flex items-center justify-center text-xs text-center font-bold overflow-hidden">
-                    <img src="https://ui-avatars.com/api/?name=Dormz&background=09090b&color=e4e4e7&size=100" alt="Server" class="grayscale">
+                    <img src="https://ui-avatars.com/api/?name=Pandania&background=09090b&color=e4e4e7&size=100" alt="Server" class="grayscale">
                 </div>
             </div>
 
-            <!-- Titles -->
-            <h2 class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">Server Name</h2>
+            <!-- GANTI NAMA SERVER DI SINI -->
+            <h2 class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">Pandania.ETH</h2>
             <p class="text-[11px] text-center font-semibold mb-8 px-2 text-[#a1a1aa] leading-relaxed">
                 To get yourself as "dormz★member"<br>you should verify your username account
             </p>
 
-            <!-- Input Username -->
             <div class="w-full mb-8">
                 <label class="block text-[10px] font-bold mb-2 ml-1 text-[#71717a] uppercase tracking-wider">Discord username</label>
                 <div class="relative">
@@ -207,14 +180,11 @@
                 <p class="text-[9px] text-[#52525b] mt-2 ml-1"><i class="fas fa-lock mr-1"></i> Ensure Discord DMs are OPEN for the code.</p>
             </div>
 
-            <!-- Submit Button -->
             <button onclick="requestVerification()" id="btnRequest" class="w-full bg-[#e4e4e7] hover:bg-white text-[#09090b] transition h-12 rounded-xl font-extrabold text-sm shadow-lg">
                 Verify Account
             </button>
         </div>
 
-
-        <!-- STEP 2: OTP / Secret Code Form (Hidden by default) -->
         <div id="step2-card" class="main-card w-full max-w-sm p-8 flex flex-col items-center relative hidden opacity-0 transition-all duration-500">
             
             <h2 class="text-2xl font-extrabold mb-3 text-center text-white tracking-wide">Username found!</h2>
@@ -225,7 +195,6 @@
                 of fake/bot account
             </p>
 
-            <!-- 5 Digit OTP Input -->
             <div class="flex gap-2.5 justify-center mb-8 w-full" id="otpContainer">
                 <input type="text" maxlength="1" class="otp-box font-bold" autofocus>
                 <input type="text" maxlength="1" class="otp-box font-bold">
@@ -234,12 +203,10 @@
                 <input type="text" maxlength="1" class="otp-box font-bold">
             </div>
 
-            <!-- Timer -->
             <p id="timerText" class="text-[10px] font-bold text-center mt-2 text-[#71717a] uppercase tracking-widest">
                 Code expires in <span id="countdown" class="text-[#e4e4e7]">2:00</span>
             </p>
             
-            <!-- Buffering / Loading State -->
             <div id="loadingVerifying" class="hidden flex-col items-center mt-4">
                 <i class="fas fa-circle-notch fa-spin text-xl text-[#a1a1aa] mb-3"></i>
                 <p class="text-[10px] font-bold text-[#a1a1aa] uppercase tracking-widest">Verifying code...</p>
@@ -252,28 +219,23 @@
 
     </main>
 
-    <!-- Footer Credits -->
     <footer class="fixed bottom-4 w-full text-center z-0 pointer-events-none">
         <p class="text-[9px] font-bold text-[#3f3f46] tracking-widest uppercase">
-            Credit aku (Reunite) & Gemini AI 🌹
+            Web by reunite & powered by gemini 🌹
         </p>
     </footer>
 
-    <!-- LOGIC SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Secret Admin URL Check
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
-            // Kalau URL ada akhiran ?owner (Contoh: web.github.io/?owner)
             if (urlParams.has('owner')) {
                 document.getElementById('adminContainer').classList.remove('hidden');
             }
         });
 
-        // Firebase Config (Tetap biarkan ini)
         const firebaseConfig = {
             apiKey: "AIzaSyDomIAXu2J5j6ZA0Yl6qrhm96mwAKPOw20",
             authDomain: "dormz-member-access.firebaseapp.com",
@@ -285,7 +247,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Sidebar Toggle Logic
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -302,7 +263,6 @@
             }
         }
 
-        // Music Logic
         let isMusicPlaying = false;
         window.toggleMusic = function() {
             const bgMusic = document.getElementById('bgMusic');
@@ -312,23 +272,21 @@
             if (!isMusicPlaying) {
                 bgMusic.play();
                 isMusicPlaying = true;
-                musicCross.classList.add('hidden'); // Hilangkan X
+                musicCross.classList.add('hidden');
                 musicBtn.classList.replace('text-[#71717a]', 'text-white');
             } else {
                 bgMusic.pause();
                 isMusicPlaying = false;
-                musicCross.classList.remove('hidden'); // Munculkan X
+                musicCross.classList.remove('hidden');
                 musicBtn.classList.replace('text-white', 'text-[#71717a]');
             }
         }
 
-        // OTP Box Logic
         const inputs = document.querySelectorAll('.otp-box');
         inputs.forEach((input, index) => {
             input.addEventListener('keyup', (e) => {
-                // Alphanumeric support for code
                 if (e.key.length === 1 && input.value !== '') {
-                    input.value = input.value.toUpperCase(); // Force uppercase
+                    input.value = input.value.toUpperCase();
                     if (index < inputs.length - 1) inputs[index + 1].focus();
                 } else if (e.key === 'Backspace') {
                     if (index > 0) inputs[index - 1].focus();
@@ -341,7 +299,6 @@
             });
         });
 
-        // Transisi Animasi OTP
         let countdownInterval;
         
         window.requestVerification = function() {
@@ -411,9 +368,9 @@
             loading.classList.remove('hidden');
             loading.classList.add('flex');
             inputs.forEach(i => i.disabled = true);
+            // Logika verifikasi otp dengan firebase akan dibuat nanti di Tahap 2
         }
 
-        // Pantau Status Bot
         const configRef = doc(db, "verify_portal", "main_config");
         onSnapshot(configRef, (docSnap) => {
             const data = docSnap.data();
