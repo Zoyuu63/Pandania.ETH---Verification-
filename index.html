@@ -10,8 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
         
         body {
-            background-color: #09090b; /* Void Ash Theme */
-            /* UNTUK CUSTOM BACKGROUND: Hapus tanda /* di bawah ini dan masukkan link gambarmu */
+            background-color: #09090b; 
             /* background-image: url('LINK_GAMBAR_DISINI'); background-size: cover; background-position: center; background-blend-mode: overlay; */
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
@@ -61,12 +60,12 @@
             border-color: #e4e4e7;
             outline: none;
         }
-
-        #sidebarLeft {
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 55;
+        .otp-box:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        #sidebarRight {
+
+        #sidebarLeft, #sidebarRight {
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 55;
         }
@@ -98,7 +97,7 @@
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- NAVBAR (Tetap Paling Atas) -->
+    <!-- NAVBAR -->
     <nav class="top-bar w-full h-16 flex items-center justify-between px-6 fixed top-0">
         <div class="flex gap-6 items-center">
             <button onclick="toggleSidebarLeft()" class="text-[#71717a] hover:text-[#e4e4e7] transition text-2xl">
@@ -118,7 +117,7 @@
 
     <div id="overlay" onclick="closeAllSidebars()" class="fixed inset-0 bg-black/60 opacity-0 pointer-events-none hidden"></div>
 
-    <!-- SIDEBAR KIRI (STAFF & MEMBERS) -->
+    <!-- SIDEBAR KIRI -->
     <aside id="sidebarLeft" class="fixed top-0 left-0 h-full w-[300px] bg-[#121214] shadow-2xl transform -translate-x-full flex flex-col pt-20 border-r border-[#27272a]">
         <div class="p-4 border-b border-[#27272a]">
             <p class="text-[10px] font-bold text-center tracking-widest text-[#a1a1aa] uppercase">
@@ -139,7 +138,7 @@
         </div>
     </aside>
 
-    <!-- SIDEBAR KANAN (ADMIN PANEL) -->
+    <!-- SIDEBAR KANAN -->
     <aside id="sidebarRight" class="fixed top-0 right-0 h-full w-[300px] bg-[#121214] shadow-2xl transform translate-x-full flex flex-col pt-20 border-l border-[#27272a]">
         <div class="p-4 border-b border-[#27272a]">
             <p class="text-[10px] font-bold text-center tracking-widest text-red-500 uppercase">
@@ -150,7 +149,7 @@
             <h3 class="text-[10px] font-bold text-[#52525b] uppercase tracking-widest mb-2 mt-2">LIVE VERIFICATION</h3>
             <div id="adminLogsContainer" class="space-y-2">
                 <div class="p-3 rounded-lg border border-[#27272a] bg-[#09090b] text-center">
-                    <p class="text-[10px] text-[#71717a]">No active requests.</p>
+                    <p class="text-[10px] text-[#71717a]">System is monitoring...</p>
                 </div>
             </div>
             <button onclick="window.location.reload()" class="mt-6 w-full bg-[#18181b] hover:bg-[#27272a] text-[#a1a1aa] border border-[#27272a] transition p-3 rounded-lg text-xs font-bold text-left flex justify-between items-center">
@@ -187,8 +186,6 @@
                     <input type="text" id="usernameInput" placeholder="username" autocomplete="off"
                            class="input-dark w-full h-12 pl-10 pr-4 rounded-xl text-sm font-semibold">
                 </div>
-                
-                <!-- ERROR TEXT MERAH -->
                 <p id="errorText" class="text-[10px] font-bold text-red-500 mt-2 ml-1 uppercase tracking-wider hidden">USERNAME NOT FOUND!</p>
                 <p id="helperText" class="text-[9px] text-[#52525b] mt-1.5 ml-1 transition-all"><i class="fas fa-lock mr-1"></i> Ensure Discord DMs are OPEN for the code.</p>
             </div>
@@ -198,7 +195,7 @@
             </button>
         </div>
 
-        <!-- STEP 2: OTP (Sembunyi) -->
+        <!-- STEP 2: OTP -->
         <div id="step2-card" class="main-card w-full max-w-sm p-8 flex flex-col items-center relative hidden opacity-0 transition-all duration-500">
             
             <h2 class="text-2xl font-extrabold mb-3 mt-4 text-center text-white tracking-wide">Username found!</h2>
@@ -209,7 +206,7 @@
                 of fake/bot account
             </p>
 
-            <div class="flex gap-2.5 justify-center mb-8 w-full" id="otpContainer">
+            <div class="flex gap-2.5 justify-center mb-6 w-full" id="otpContainer">
                 <input type="text" maxlength="1" class="otp-box font-bold" autofocus>
                 <input type="text" maxlength="1" class="otp-box font-bold">
                 <input type="text" maxlength="1" class="otp-box font-bold">
@@ -219,16 +216,17 @@
 
             <p id="otpErrorText" class="text-[10px] font-bold text-red-500 hidden mb-2 uppercase tracking-widest text-center">INVALID CODE!</p>
 
+            <!-- Loading State (Sembunyi by default) -->
+            <div id="loadingVerifying" class="hidden flex-col items-center justify-center w-full mb-2">
+                <i class="fas fa-circle-notch fa-spin text-xl text-[#e4e4e7] mb-2"></i>
+                <p class="text-[10px] font-bold text-[#a1a1aa] uppercase tracking-widest">VERIFYING CODE...</p>
+            </div>
+
             <p id="timerText" class="text-[10px] font-bold text-center mt-2 text-[#71717a] uppercase tracking-widest">
                 Code expires in <span id="countdown" class="text-[#e4e4e7]">2:00</span>
             </p>
             
-            <div id="loadingVerifying" class="hidden flex-col items-center mt-4">
-                <i class="fas fa-circle-notch fa-spin text-xl text-[#a1a1aa] mb-3"></i>
-                <p class="text-[10px] font-bold text-[#a1a1aa] uppercase tracking-widest">VERIFYING...</p>
-            </div>
-
-            <button onclick="cancelVerification()" class="mt-8 text-[10px] text-[#52525b] hover:text-[#a1a1aa] transition font-semibold uppercase tracking-widest">
+            <button onclick="cancelVerification()" id="cancelBtn" class="mt-8 text-[10px] text-[#52525b] hover:text-[#a1a1aa] transition font-semibold uppercase tracking-widest">
                 <i class="fas fa-arrow-left mr-1"></i> CANCEL
             </button>
         </div>
@@ -259,7 +257,7 @@
 
         let currentRequestId = null;
 
-        // REALTIME DATA SINKRONISASI
+        // REALTIME DATA SINKRONISASI DARI BOT
         onSnapshot(doc(db, "verify_portal", "main_config"), (docData) => {
             if (docData.exists()) {
                 const data = docData.data();
@@ -292,7 +290,7 @@
             }
         });
 
-        // REQUEST OTP KE BOT
+        // REQUEST OTP
         window.requestOTP = async function() {
             const usernameInput = document.getElementById('usernameInput');
             const username = usernameInput.value.trim().toLowerCase();
@@ -349,7 +347,7 @@
             document.getElementById('errorText').classList.remove('hidden');
         }
 
-        // KIRIM OTP
+        // KIRIM OTP & LOADING STATE
         window.submitOTP = async function() {
             const inputs = document.querySelectorAll('.otp-box');
             let otpVal = "";
@@ -357,32 +355,45 @@
             
             if(otpVal.length !== 5 || !currentRequestId) return;
 
+            // Tampilkan UI Loading (Buffering)
             document.getElementById('timerText').classList.add('hidden');
-            document.getElementById('loadingVerifying').classList.remove('hidden');
-            document.getElementById('loadingVerifying').classList.add('flex');
+            document.getElementById('cancelBtn').classList.add('hidden');
+            const loadingDiv = document.getElementById('loadingVerifying');
+            loadingDiv.classList.remove('hidden');
+            loadingDiv.classList.add('flex');
+            
+            // Kunci input agar tidak bisa diketik lagi
             inputs.forEach(i => i.disabled = true);
 
+            // Update status ke Firebase agar dicek Bot
             await updateDoc(doc(db, "verify_portal", "main_config", "requests", currentRequestId), {
                 status: 'checking_otp',
                 enteredOtp: otpVal
             });
 
+            // Tunggu jawaban dari bot
             const unsubOtp = onSnapshot(doc(db, "verify_portal", "main_config", "requests", currentRequestId), (snap) => {
                 const finalData = snap.data();
+                
                 if(finalData.status === 'verified') {
+                    // SUKSES: Ganti isi kartu jadi Centang Hijau
                     document.getElementById('step2-card').innerHTML = `
-                        <div class="text-[#e4e4e7] text-5xl mb-4 mt-6"><i class="fas fa-check-circle"></i></div>
-                        <h2 class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">SUCCESS</h2>
+                        <div class="text-[#10b981] text-6xl mb-4 mt-6 animate-pulse"><i class="fas fa-check-circle"></i></div>
+                        <h2 class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">VERIFIED!</h2>
                         <p class="text-[11px] text-center font-semibold text-[#a1a1aa] leading-relaxed mb-6">
-                            You've been granted the role.<br>Welcome to The Dormz.
+                            Role has been granted to your Discord account.<br>Welcome to The Dormz.
                         </p>
                     `;
                     unsubOtp();
                 } else if (finalData.status === 'wrong_otp') {
-                    document.getElementById('loadingVerifying').classList.add('hidden');
-                    document.getElementById('loadingVerifying').classList.remove('flex');
+                    // GAGAL: Kembalikan UI dan kasih tulisan merah
+                    loadingDiv.classList.add('hidden');
+                    loadingDiv.classList.remove('flex');
                     document.getElementById('timerText').classList.remove('hidden');
+                    document.getElementById('cancelBtn').classList.remove('hidden');
                     document.getElementById('otpErrorText').classList.remove('hidden');
+                    
+                    // Buka kunci input dan kosongkan
                     inputs.forEach(i => { i.disabled = false; i.value = ''; i.classList.add('input-error'); });
                     inputs[0].focus();
                     
@@ -393,7 +404,7 @@
         }
     </script>
 
-    <!-- UI SCRIPTS -->
+    <!-- UI SCRIPTS & PASTE HANDLER -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -402,7 +413,9 @@
             }
 
             const inputs = document.querySelectorAll('.otp-box');
+            
             inputs.forEach((input, index) => {
+                // Event saat ngetik 1 per 1
                 input.addEventListener('keyup', (e) => {
                     input.classList.remove('input-error');
                     document.getElementById('otpErrorText').classList.add('hidden');
@@ -414,9 +427,38 @@
                         if (index > 0) inputs[index - 1].focus();
                     }
                 });
+
+                // Event saat tombol PASTE ditekan
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    // Ambil teks yang di-paste, batasi 5 karakter
+                    const pastedData = e.clipboardData.getData('text').trim().slice(0, inputs.length).split('');
+                    
+                    if (pastedData.length > 0) {
+                        // Hilangkan error merah jika ada
+                        document.getElementById('otpErrorText').classList.add('hidden');
+                        
+                        // Sebarkan angka ke tiap kotak
+                        pastedData.forEach((char, i) => {
+                            if (i < inputs.length) {
+                                inputs[i].value = char;
+                                inputs[i].classList.remove('input-error');
+                            }
+                        });
+                        
+                        // Otomatis verifikasi jika 5 kotak penuh
+                        if (pastedData.length === 5) {
+                            inputs[4].focus();
+                            window.submitOTP();
+                        } else {
+                            inputs[pastedData.length - 1].focus();
+                        }
+                    }
+                });
             });
         });
 
+        // Sidebar & Music Controls... (Sama seperti sebelumnya)
         const overlay = document.getElementById('overlay');
         const sidebarLeft = document.getElementById('sidebarLeft');
         const sidebarRight = document.getElementById('sidebarRight');
